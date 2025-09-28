@@ -2,7 +2,7 @@
 <img src="./assets/logo2.png" width="500"/>
 </div>
 
-# RoboBrain-X:A Unified Cross-Embodiment Vision-Language-Action Model for Token Reasoning and Action Generation. 
+# RoboBrain-X: A Unified Cross-Embodiment Vision-Language-Action Model for Token Reasoning and Action Generation. 
 
 
 <p align="center">
