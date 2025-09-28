@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./assets/logo2.png" width="500"/>
+<img src="./assets/RoboBrain-X.png" width="500"/>
 </div>
 
 # RoboBrain-X: A Unified Cross-Embodiment Vision-Language-Action Model for Token Reasoning and Action Generation. 
