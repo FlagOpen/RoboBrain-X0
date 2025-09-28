@@ -32,9 +32,16 @@
 ## 🔥 Overview
 We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology foundation model designed to overcome the limitations of single-robot systems in heterogeneous ontology transfer. By leveraging End-Effector pose representation in SE(3) task space, coupled with a Unified Action Vocabulary (UAV) and action tokenizer, RoboBrain-X achieves efficient zero-shot generalization and complex task decomposition. Its Grouped Residual Quantizer (GRVQ) maps continuous control sequences from diverse degrees of freedom and mechanical structures to a shared discrete action primitive space, ensuring semantic consistency and transferability across ontologies such as **AgileX**, **R1-Lite dual-arm wheeled robots**, and **Franka single-arm systems**. Through ontology-conditioned diverse prompting, the model supports flexible decoding from multi-view RGB-D inputs to specific executions, significantly reducing training and inference overhead. RoboBrain-X delivers state-of-the-art performance in embodied reasoning tasks, laying a robust foundation for developing versatile, real-world robotic agents and advancing embodied intelligence research.
 
-<div align="center">
-<img src="./assets/Sim_Result.png" />
+
+![Sim_Result](./assets/Sim_Result.png)
+
+<div style="display: flex; justify-content: center;">
+  <img src="./assets/Real_Result1.png" style="width: 45%; margin-right: 10px;" />
+  <img src="./assets/Real_Result2.png" style="width: 45%;" />
 </div>
+<!-- <div align="center">
+<img src="./assets/Sim_Result.png" />
+</div> -->
 
 ## 🗞️ News
 - **`2025-09-18`**: 🔥 [**Reason-RFT**](https://arxiv.org/abs/2503.20752) (Core Post-Training Strategy for RoboBrain2.0) gets accepted to **NeurIPS 2025**.
