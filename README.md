@@ -2,7 +2,7 @@
 <img src="./assets/logo2.png" width="500"/>
 </div>
 
-# RoboBrain 2.0: See Better. Think Harder. Do Smarter. 
+# RoboBrain-X:A Unified Cross-Embodiment Vision-Language-Action Model for Token Reasoning and Action Generation. 
 
 
 <p align="center">
