@@ -43,12 +43,12 @@ sys.path.append("/share/project/dumengfei/code/sim_data_process")
 from pose_transform import add_delta_to_euler_pose
 from action_token.action_chunk_to_fast_token import ActionChunkProcessor
 
-# --- 服务配置 ---
-# 是否启用子任务模式
-SUBTASK_MODE = True  # 设置为 True 或 False 来切换模式
+# --- Service Configuration ---
+# Whether to enable subtask mode
+SUBTASK_MODE = True  # Set to True or False to switch modes
 
-# 模型路径配置
-# 根据 SUBTASK_MODE 选择不同的模型路径
+# Model path configuration
+# Choose different model paths based on SUBTASK_MODE
 if SUBTASK_MODE:
     MODEL_PATH = '/share/project/lizhiyu/data/ckpt/robotics_pretrain_modeltp1pp1_S6_subtask_agilex_demo50'
 else:
@@ -66,22 +66,22 @@ SERVICE_CONFIG = {
     'max_content_length': 16 * 1024 * 1024
 }
 
-# --- 日志配置 ---
+# --- Logging Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# --- 全局变量 ---
+# --- Global Variables ---
 app = Flask(__name__)
 CORS(app)
 model = None
 processor = None
 action_tokenizer = None
 
-# --- 辅助函数与类 ---
+# --- Helper Functions and Classes ---
 
 _TOKENIZER_CACHE: dict[int, ActionChunkProcessor] = {}
 def get_tokenizer(max_len: int) -> ActionChunkProcessor:
-    """为每个进程缓存并返回一个ActionChunkProcessor实例"""
+    """Cache and return an ActionChunkProcessor instance for each process"""
     tok = _TOKENIZER_CACHE.get(max_len)
     if tok is None:
         tok = ActionChunkProcessor(max_len=max_len)
@@ -89,7 +89,7 @@ def get_tokenizer(max_len: int) -> ActionChunkProcessor:
     return tok
 
 def load_model():
-    """加载并初始化模型和处理器"""
+    """Load and initialize the model and processor"""
     global model, processor, action_tokenizer
     try:
         logger.info(f"Loading model: {MODEL_PATH} (Subtask Mode: {SUBTASK_MODE})")
@@ -117,13 +117,13 @@ def load_model():
         return False
 
 def inverse_transform(x_norm, scale, offset):
-    """根据均值和标准差对动作进行反归一化"""
+    """Denormalize actions based on mean and standard deviation"""
     x_norm = np.asarray(x_norm)
     return (x_norm - offset) / scale
 
-# 加载动作归一化统计数据
+# Load action normalization statistics
 try:
-    # 注意：根据不同模型，可能需要加载不同的统计文件
+    # Note: Depending on the model, different statistics files may need to be loaded
     if SUBTASK_MODE:
         stats_file = "/share/project/dumengfei/code/pretrain_data_process/real_data/agilex/demo_0920/agilex_normal_0921_30Hz.json"
     else:
@@ -159,11 +159,11 @@ def process_images(images_dict: dict) -> list:
         logger.error(f"Error processing images: {e}")
         raise ValueError("Image processing failed")
 
-# --- Flask API 端点 ---
+# --- Flask API Endpoints ---
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    """健康检查端点，返回服务和模型状态"""
+    """Health check endpoint, returns service and model status"""
     if model is None or processor is None:
         return jsonify({"status": "error", "message": "Model not loaded"}), 503
     
@@ -185,7 +185,7 @@ def health_check():
 
 @app.route('/info', methods=['GET'])
 def service_info():
-    """提供服务元信息"""
+    """Provide service metadata"""
     return jsonify({
         "service_name": "RoboBrain Robotics API for Agilex",
         "version": "2.0.0",
@@ -200,7 +200,7 @@ def service_info():
 
 @app.route('/infer', methods=['POST'])
 def infer_api():
-    """核心推理API端点"""
+    """Core inference API endpoint"""
     start_time = time.time()
     
     if model is None:
@@ -216,9 +216,9 @@ def infer_api():
         eef_pose = np.array(data['eef_pose']) # shape (1, 14)
         images_pil = process_images(images)
 
-        # --- Prompt 生成 ---
+        # --- Prompt Generation ---
         if SUBTASK_MODE:
-            # 子任务模式 Prompt
+            # Subtask mode Prompt
             prompt_template = (
                 "You are controlling an Agilex dual-arm robot. Your task is to adjust the end effector poses (EEPose) at 30Hz to complete a specified task. "
                 "Your output must include two components: 1. Immediate sub-task: The specific action you will execute first to progress toward the overall task; 2. Control tokens: These will be decoded into a 30×14 action sequence to implement the sub-task. "
@@ -227,7 +227,7 @@ def infer_api():
                 "Your current visual inputs are: robot front image"
             )
         else:
-            # 标准模式 Prompt
+            # Standard mode Prompt
             prompt_template = (
                 "You are controlling an Agilex dual-arm robot. Your task is to adjust the end effector poses (EEPose) at 30Hz to complete a specified task. "
                 "You need to output control tokens that can be decoded into a 30×14 action sequence. The sequence has 30 consecutive actions, each with 14 dimensions. "
@@ -250,7 +250,7 @@ def infer_api():
         text_prompt = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = processor(text=[text_prompt], images=images_pil, padding=True, return_tensors="pt").to(model.device)
 
-        # --- 模型推理 ---
+        # --- Model Inference ---
         gen_kwargs = {
             "max_new_tokens": 768, "do_sample": False, "temperature": 0.0,
             "pad_token_id": processor.tokenizer.pad_token_id, "eos_token_id": processor.tokenizer.eos_token_id,
@@ -262,7 +262,7 @@ def infer_api():
         input_length = inputs.input_ids.shape[1]
         output_tokens = output_ids[input_length:].detach().cpu().tolist()
 
-        # --- 输出解析 ---
+        # --- Output Parsing ---
         subtask_result = "N/A"
         if SUBTASK_MODE:
             try:
@@ -290,7 +290,7 @@ def infer_api():
         actions_norm, _ = action_tokenizer._extract_actions_from_tokens([action_ids], action_horizon=30, action_dim=14)
         delta_actions = actions_norm[0]
         
-        # --- 动作后处理 ---
+        # --- Action Post-processing ---
         if delta_actions is None or action_stats is None:
              raise ValueError("Action decoding failed or action normalization statistics not loaded")
 
@@ -298,15 +298,15 @@ def infer_api():
         offset = np.array(action_stats['action.eepose']['offset_'])
         delta_actions_denorm = inverse_transform(np.array(delta_actions), scale, offset)
         
-        # 计算绝对姿态序列
+        # Calculate absolute pose sequence
         final_ee_actions = []
         current_eef_pose = eef_pose.squeeze().copy()
         for i in range(30):
-            # 右臂更新
+            # Right arm update
             current_eef_pose[:3] += delta_actions_denorm[i][:3]
             current_eef_pose[3:6] = add_delta_to_euler_pose(current_eef_pose[3:6], delta_actions_denorm[i][3:6])
             current_eef_pose[6] = delta_actions_denorm[i][6]
-            # 左臂更新
+            # Left arm update
             current_eef_pose[7:10] += delta_actions_denorm[i][7:10]
             current_eef_pose[10:13] = add_delta_to_euler_pose(current_eef_pose[10:13], delta_actions_denorm[i][10:13])
             current_eef_pose[13] = delta_actions_denorm[i][13]
@@ -329,7 +329,7 @@ def infer_api():
         logger.error(f"Severe error during inference: {e}", exc_info=True)
         return jsonify({"success": False, "error": str(e)}), 500
 
-# --- 主程序入口 ---
+# --- Main Program Entry ---
 if __name__ == '__main__':
     if not load_model():
         sys.exit(1)
