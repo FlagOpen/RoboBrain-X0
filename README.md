@@ -63,6 +63,7 @@ This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based 
 
 <div align="center">
 <img src="./assets/RoboBrain-X.jpg" />
+<img src="./assets/RoboBrain-X-2.jpg" />      
 </div>
 
 
