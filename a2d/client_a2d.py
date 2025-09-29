@@ -4,7 +4,7 @@ import os
 import time
 import datetime
 from typing import Tuple, Optional
- 
+
 import cv2
 import numpy as np
 import requests
