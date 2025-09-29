@@ -55,7 +55,7 @@ We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology f
 
 
 ## 🚀 Features
-**RoboBrain-X0** supports the unified modeling of heterogeneous ontologies and offers zero-shot generalization and complex task decomposition capabilities. Building on RoboBrain's multimodal foundation, RoboBrain-X0 further integrates real-world robot motion data based on RoboBrain-2.0 data. By unifying vision, language, and motion modeling, it achieves cross-ontology generalization and adaptation, providing integrated capabilities from perception to execution.
+**RoboBrain-X0** supports the unified modeling of heterogeneous ontologies and offers **zero-shot** generalization and complex task decomposition capabilities. Building on RoboBrain's multimodal foundation, RoboBrain-X0 further integrates real-world robot motion data based on **RoboBrain-2.0** data. By unifying vision, language, and motion modeling, it achieves cross-ontology generalization and adaptation, providing integrated capabilities from perception to execution.
 
 <div align="center">
 <img src="./assets/demo_01.png", width=750 />
