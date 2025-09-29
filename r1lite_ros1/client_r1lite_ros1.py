@@ -1,135 +1,146 @@
 import base64
 import io
 import time
+import datetime
+import os
+
+import cv2
 import numpy as np
 import requests
-import cv2
-import datetime
-from robot_env import RobotEnv
-import ipdb
 from PIL import Image
 
-CONTROL_MODE = 'eepose'  # eepose
+# Import the robot-specific SDK/environment
+from robot_env import RobotEnv
+
+# --- 1. CONFIGURATION ---
+
+# URL of the inference server
+INFERENCE_SERVER_URL = "http://172.16.20.166:8000/infer"
+
+# Robot control mode: 'eepose' for end-effector pose, 'joint' for joint angles
+CONTROL_MODE = 'eepose'
+
+# Directory to save periodic image logs
+LOG_IMAGE_DIR = "./log_images_r1lite_ros1"
+
+# Mapping from server-expected camera names to environment camera names
+CAMERA_MAPPING = {
+    "cam_head": "image_right",
+    "cam_left_wrist": "image_left_wrist",
+    "cam_right_wrist": "image_right_wrist",
+}
+
+# --- 2. HELPER FUNCTIONS ---
+
 def encode_image(img: np.ndarray) -> str:
-    """Encode OpenCV image as base64 PNG string."""
-    _, buffer = cv2.imencode('.png', img)
-    return base64.b64encode(buffer).decode('utf-8')
-
-env = RobotEnv(
-)
-
-def encode_image_pil_simple(img: np.ndarray) -> str:
-    """Encode numpy array as base64 PNG string using PIL."""
-    # 转换为PIL图像（假设是RGB格式）
-    pil_image = Image.fromarray(img.astype(np.uint8))
-    
-    # 保存到内存缓冲区并编码
+    """Encodes a numpy array (BGR) into a base64 PNG string."""
+    # Convert BGR (from OpenCV) to RGB for PIL
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    pil_image = Image.fromarray(img_rgb)
     buffer = io.BytesIO()
     pil_image.save(buffer, format='PNG')
     return base64.b64encode(buffer.getvalue()).decode('utf-8')
 
-def encode_image_from_frame_pil_simple(frames, cam_name):
-    """简化版本的图像编码函数"""
-    img = frames.get(cam_name)
+def setup_logging_directory():
+    """Creates the logging directory if it doesn't exist."""
+    if not os.path.exists(LOG_IMAGE_DIR):
+        os.makedirs(LOG_IMAGE_DIR)
+        print(f"Created log directory: {LOG_IMAGE_DIR}")
+
+# --- 3. MAIN EXECUTION ---
+
+def main():
+    """Main function to connect to the robot, run the control loop, and handle shutdown."""
+    setup_logging_directory()
+    env = None
     
-    if img is not None and img.size > 0:
-        try:
-            return encode_image_pil_simple(img)
-        except Exception as e:
-            print(f"编码错误 ({cam_name}): {e}")
-            return None
-    else:
-        print(f"警告：{cam_name} 图像为空")
-        return None
+    try:
+        # --- A. INITIALIZATION ---
+        print("Initializing robot environment (ROS1)...")
+        env = RobotEnv()
+        time.sleep(2) # Wait for environment to stabilize
+        print("Initialization complete!")
 
-try:
-    while True:
-        # cmd = input("\n按下 'c' 继续一次推理和控制，或按 Ctrl+C 退出：")
-        # if cmd.strip().lower() != 'c':
-        #     print("[!] 非法输入，输入 'c' 开始下一步。")
-        #     continue
-
-        frames, state = env.update_obs_window()
-
-        # ipdb.set_trace()
-        for name, img in frames.items():
-            save_path = f"./latest_{name}.png"
-            cv2.imwrite(save_path, img)
-            print(f'[Saved] {save_path}')
-        
-        encoded_images = {
-        # 'image_left': encode_image_from_frame(frames, "image_left"),
-        'cam_head': encode_image_from_frame_pil_simple(frames, "image_right"),
-        'cam_left_wrist': encode_image_from_frame_pil_simple(frames, "image_left_wrist"),
-        'cam_right_wrist': encode_image_from_frame_pil_simple(frames, "image_right_wrist")
-        }
-        data = {
-            "state": state['qpos'],           # shape: [1, 14]
-            "eef_pose": state['eef_pose'],  # shape: [1, 14]
-            # "instruction": "pick up the orange",
-            "images": encoded_images,
-            "instruction": 'put the orange into the basket.'
-        }
-
-        # response = requests.post("http://172.16.16.33:8003/infer", json=data, timeout=60)
-
-        response = requests.post("http://172.16.20.166:8000/infer", json=data, timeout=60)
-        print("[√] Response:", response.status_code)
-        # print(response)
-        result = response.json()
-        
-        print("[Response JSON]:", result)
-        # ipdb.set_trace()
-        
-        if CONTROL_MODE == 'eepose':
-            actions = result.get("eepose", [])
-            if not actions:
-                print("[!] 未返回动作，跳过控制")
+        # --- B. MAIN CONTROL LOOP ---
+        print("Entering main control loop...")
+        while True:
+            # --- i. Get Observations ---
+            print("\n" + "="*50)
+            print("1. Gathering robot state and images...")
+            frames, state = env.update_obs_window()
+            if state is None or not frames:
+                print("Warning: No state or image data received. Skipping this cycle.")
+                time.sleep(1)
                 continue
-            actions = np.array(actions)[:]
-
-            # 获取完整动作序列并依次执行
-            for i, act in enumerate(actions):
-                action = np.array(act, dtype=np.float32)
-
-                print(f"left gripper: {action[15]}, right gripper: {action[7]}")
-
-                action[7] *= 0.9
-                action[15] *= 0.9
-
-                if action[7] < 70:
-                    action[7] = 0
-                    
-                if action[15] < 70:
-                    action[15] = 0
-
-
-                # action[7]=70
-                # action[15]=70
-
-
-                print(f"[→ Step {i+1}] 执行动作: {action.round(3)}")
-                env.control_eef(action)
-                # env.control(action)
-                time.sleep(0.01)  # 可根据实际需要调整间隔时间
-                
-        elif CONTROL_MODE == 'joint':
-            actions = result.get("qpos", [])
             
-            if not actions:
-                print("[!] 未返回动作，跳过控制")
+            eef_pose_state = state.get('eef_pose')
+            qpos_state = state.get('qpos')
+
+            # --- ii. Prepare Data for Server ---
+            print("2. Preparing data for inference server...")
+            encoded_images = {}
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            for server_name, env_name in CAMERA_MAPPING.items():
+                img = frames.get(env_name)
+                if img is not None and img.size > 0:
+                    encoded_images[server_name] = encode_image(img)
+                    log_path = os.path.join(LOG_IMAGE_DIR, f"{server_name}_{timestamp}.png")
+                    cv2.imwrite(log_path, img)
+                else:
+                    print(f"Warning: Image for '{server_name}' is not available.")
+            
+            request_data = {
+                "eef_pose": eef_pose_state,
+                "state": qpos_state, # Some models may use joint state as well
+                "instruction": "put the orange into the basket.",
+                "images": encoded_images
+            }
+
+            # --- iii. Send Request to Server ---
+            print(f"3. Sending request to {INFERENCE_SERVER_URL}...")
+            try:
+                response = requests.post(INFERENCE_SERVER_URL, json=request_data, timeout=60)
+                response.raise_for_status()
+                result = response.json()
+                print("...Success! Received response from server.")
+            except requests.exceptions.RequestException as e:
+                print(f"Error communicating with server: {e}. Retrying after 5s.")
+                time.sleep(5)
                 continue
-            actions = np.array(actions)[:]
 
-            # 获取完整动作序列并依次执行
-            for i, act in enumerate(actions):
+            # --- iv. Parse and Execute Actions ---
+            print("4. Parsing and executing actions...")
+            actions = result.get(CONTROL_MODE, [])
+            if not actions:
+                print("No actions received from the model. Skipping.")
+                continue
+
+            for i, act in enumerate(np.array(actions)):
                 action = np.array(act, dtype=np.float32)
-                print(f"[→ Step {i+1}] 执行动作: {action.round(3)}")
-                env.control(action)
-                time.sleep(0.05)  # 可根据实际需要调整间隔时间
+                print(f"[Step {i+1}/{len(actions)}] Executing action: {np.round(action, 3)}")
 
-except KeyboardInterrupt:
-    print("\n[Main] Interrupted by user.")
-finally:
-    # env.shutdown()
-    print("[Main] RobotEnv shut down.")
+                if CONTROL_MODE == 'eepose':
+                    # Optional: Apply scaling or clipping to gripper commands
+                    # action[7] *= 0.9  # right gripper
+                    # action[15] *= 0.9 # left gripper
+                    env.control_eef(action)
+                elif CONTROL_MODE == 'joint':
+                    env.control(action)
+                    
+                time.sleep(0.05) # Short pause between actions
+            
+            print("Action sequence execution complete.")
+
+    except KeyboardInterrupt:
+        print("\nProgram interrupted by user.")
+    except Exception as e:
+        print(f"\nAn unexpected error occurred: {e}")
+    finally:
+        # --- C. SHUTDOWN ---
+        # The original script did not have a shutdown call, but if your RobotEnv has one, call it here.
+        # if env:
+        #     env.shutdown()
+        print("Program finished.")
+
+if __name__ == "__main__":
+    main()
