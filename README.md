@@ -10,9 +10,11 @@
 
 </p>
 
-<p align="center">
-        </a>&nbsp&nbsp📖 <a href="">Wisemodel</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="">Technical Report</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="./assets/wechat.jpg">WeChat & RedNote</a>
-</p>
+<div style="text-align: center;">
+  📖 [Wisemodel](#) | 📑 [Technical Report](#) | 💬 [WeChat & RedNote](./assets/wechat.jpg)
+</div>
+
+![WeChat Image](./assets/wechat.jpg){style="width:50%; display:block; margin-left:auto; margin-right:auto;"}
 
 </p>
 <p align="center">
