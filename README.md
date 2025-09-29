@@ -31,7 +31,7 @@
 💬 ***If you have any questions, feel free to contact us via WeChat or RedNote.***
 
 <div style="display: flex; justify-content: center;">
-  <img src="./assets/wechat.jpeg" style="width: 90%;" />
+  <img src="./assets/wechat.jpeg" style="width: 100%;" />
 </div>
 
 ## 🔥 Overview
@@ -39,7 +39,7 @@ We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology f
 
 
 <div style="display: flex; justify-content: center;">
-  <img src="./assets/Eval_Result.jpg" style="width: 90%; height: 120%" />
+  <img src="./assets/Eval_Result.jpg" style="width: 100%; height: 120%" />
 </div>
 
 
