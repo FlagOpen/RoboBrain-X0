@@ -9,6 +9,7 @@
         </a>&nbsp&nbsp⭐️ <a href="">Project</a></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/BAAI/RoboBrain-X-Preview">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="">ModelScope</a>&nbsp&nbsp 
 
 </p>
+
 <p align="center">
         </a>&nbsp&nbsp📖 <a href="">Wisemodel</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="">Technical Report</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="./assets/wechat.jpg">WeChat & RedNote</a>
 </p>
@@ -59,10 +60,6 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 
 ## 🚀 Features
 **RoboBrain-X** supports the unified modeling of heterogeneous ontologies and offers zero-shot generalization and complex task decomposition capabilities. Building on RoboBrain's multimodal foundation, RoboBrain-X further integrates real-world robot motion data based on RoboBrain-2.0 data. By unifying vision, language, and motion modeling, it achieves cross-ontology generalization and adaptation, providing integrated capabilities from perception to execution.
-
-<!-- <div align="center">
-<img src="./assets/visualization.png" />
-</div> -->
 
 
 ## ⭐️ Architecture
