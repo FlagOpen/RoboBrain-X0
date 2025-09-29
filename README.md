@@ -1,4 +1,4 @@
-<div align="center">
+<div style="display: flex; justify-content: center;">
 <img src="./assets/Robobrain-X0-logo.png" style="width: 100%;"/>
 </div>
 
