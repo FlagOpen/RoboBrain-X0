@@ -104,9 +104,6 @@ docker run -itd \
   ghcr.io/robobrain-roboos-robotic/robotics_pretrain_flagscale:cuda12.4.1-cudnn9.5.0-python3.12-torch2.6.0-time250928-ssh
 ```
 
-
-## 💡 Simple Inference
-
 ## 🤖 Training
 ```bash
 cd /root/robotics_pretrain/flag-scale
@@ -120,9 +117,51 @@ python run.py \
 
 ## 🔍 Evaluation
 The evaluation on real robots adopts a "server-client" architecture, with a PC acting as a data transfer hub: the model is deployed on a remote server (responsible for inference), while the client (running on the robot side) sends the robot's state to the server. After the model performs inference, it returns the generated action results to the client, which then controls the robot to execute these actions.
+
+### Real Robots Evaluation Architecture Overview
+
+The system operates on a simple yet effective server-client model:
+
+1.  **Server (Inference Side)**: A remote machine (usually with a powerful GPU) where the trained model is deployed.
+    *   It receives the robot's state and images.
+    *   It performs inference to decide on the next sequence of actions.
+    *   It sends the generated actions back to the client in the HTTP response.
+2.  **Client (Robot Side)**: The Python script running on the robot's control computer.
+    *   It continuously captures the robot's current state (e.g., end-effector pose, joint angles) and images from its cameras.
+    *   It packages this observation data into a JSON payload.
+    *   It sends the data to the remote inference server via an HTTP POST request.
+
+This decoupling allows for running complex, resource-intensive models without needing high-end computing hardware directly connected to the robot.
+
+```
+┌──────────────────┐      ┌───────────────────────────┐      ┌────────────────────┐
+│                  │      │      Control PC (Client)  │      │                    │
+│   Real Robot     ├─────►│ 1. Get State & Images     ├─────►│  Inference Server  │
+│                  │      │ 2. Send Request           │      │  (Model Deployed)  │
+│                  │      │                           │      │                    │
+│                  │◄─────┤ 4. Execute Actions        │◄─────┤ 3. Return Actions  │
+└──────────────────┘      └───────────────────────────┘      └────────────────────┘
+```
+### How to Run a Server
+
+Each server can be configured and run independently. Here are the general instructions.
+
+1.  **Choose a server script** (e.g., `serve_franka.py`).
+2.  **Configure the mode**: Open the script and set the `SUBTASK_MODE` variable:
+    -   `SUBTASK_MODE = False` for standard action generation.
+    -   `SUBTASK_MODE = True` for subtask + action generation.
+3.  **Verify paths**: Ensure that `MODEL_PATH` and `STATS_PATH` (if applicable) point to the correct files for your chosen mode.
+4.  **Start the server**:
+    ```bash
+    # Example for Franka server
+    python serve_franka.py
+    ```
+### Examples   
 Inference code examples are provided for four robot platforms: A2D, Franka, Agilex, and R1lite (ROS1 and ROS2 version).
-
-
+-   **Agilex**
+-   **Franka**
+-   **R1-Lite**
+-   **A2D**
 
 ## 📑 Citation
 If you find this project useful, welcome to cite us.
