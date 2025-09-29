@@ -44,12 +44,12 @@ sys.path.append("/share/project/dumengfei/code/sim_data_process")
 from pose_transform import add_delta_to_quat_pose
 from action_token.action_chunk_to_fast_token import ActionChunkProcessor
 
-# --- 服务配置 ---
-# 是否启用子任务模式
-SUBTASK_MODE = True  # 设置为 True 或 False 来切换模式
+# --- Service Configuration ---
+# Whether to enable subtask mode
+SUBTASK_MODE = True  # Set to True or False to switch modes
 
-# 模型路径配置
-# 根据 SUBTASK_MODE 选择不同的模型路径
+# Model path configuration
+# Choose different model paths based on SUBTASK_MODE
 if SUBTASK_MODE:
     MODEL_PATH = '/share/project/jiyuheng/ckpt/robotics_pretrain_modeltp1pp1_S6_subtask'
 else:
@@ -67,22 +67,22 @@ SERVICE_CONFIG = {
     'max_content_length': 16 * 1024 * 1024
 }
 
-# --- 日志配置 ---
+# --- Logging Configuration ---
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# --- 全局变量 ---
+# --- Global Variables ---
 app = Flask(__name__)
 CORS(app)
 model = None
 processor = None
 action_tokenizer = None
 
-# --- 辅助函数与类 ---
+# --- Helper Functions and Classes ---
 
 _TOKENIZER_CACHE: dict[int, ActionChunkProcessor] = {}
 def get_tokenizer(max_len: int) -> ActionChunkProcessor:
-    """为每个进程缓存并返回一个ActionChunkProcessor实例"""
+    """Cache and return an ActionChunkProcessor instance for each process"""
     tok = _TOKENIZER_CACHE.get(max_len)
     if tok is None:
         tok = ActionChunkProcessor(max_len=max_len)
@@ -122,7 +122,7 @@ def inverse_transform(x_norm, scale, offset):
     x_norm = np.asarray(x_norm)
     return (x_norm - offset) / scale
 
-# 加载动作归一化统计数据
+# Load action normalization statistics
 try:
     with open("/share/project/dumengfei/code/pretrain_data_process/real_data/franka/franka_data_pnp_0922/normal_stats_all_action10Hz_original.json", 'r') as f:
         action_stats = json.load(f)
@@ -131,7 +131,7 @@ except FileNotFoundError:
     action_stats = None
 
 def decode_image_base64_to_pil(image_base64: str) -> Image:
-    """Decode Base64 encoded image string to PIL Image object"""
+    """将Base64编码的图片字符串解码为PIL Image对象"""
     try:
         image_data = base64.b64decode(image_base64)
         return Image.open(io.BytesIO(image_data)).convert('RGB')
@@ -140,11 +140,11 @@ def decode_image_base64_to_pil(image_base64: str) -> Image:
         raise ValueError("Invalid Base64 image string")
 
 def process_images(images_dict: dict) -> list:
-    """Process input image dictionary, return a list of PIL Images"""
+    """处理输入的图像字典，返回一个PIL Image列表"""
     try:
         image_keys = ['cam_front', 'cam_wrist']
         processed_list = [decode_image_base64_to_pil(images_dict[k]).resize((320, 240)) for k in image_keys]
-        # Save images for debugging
+        # 保存图像用于调试
         for key, img in zip(image_keys, processed_list):
             img.save(f'/share/project/dumengfei/code/real_eval/image_log/franka_{key}.png')
         return processed_list
@@ -154,7 +154,7 @@ def process_images(images_dict: dict) -> list:
         logger.error(f"Error processing images: {e}")
         raise ValueError("Image processing failed")
 
-# --- Flask API 端点 ---
+# --- Flask API Endpoints ---
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -211,9 +211,9 @@ def infer_api():
         eef_pose = np.array(data['eef_pose'])
         images_pil = process_images(images)
 
-        # --- Prompt 生成 ---
+        # --- Prompt Generation ---
         if SUBTASK_MODE:
-            # Subtask Mode Prompt
+            # Subtask mode Prompt
             prompt_template = (
                 "You are controlling a Franka single-arm robot. Your task is to adjust the end effector (EEF) poses at 30Hz to complete a specified task. "
                 "Your output must include two components: 1. Immediate sub-task: The specific action you will execute first to progress toward the overall task; 2. Control tokens: These will be decoded into a 30×7 action sequence to implement the sub-task. "
@@ -221,7 +221,7 @@ def infer_api():
                 "Your current visual inputs are robot front image"
             )
         else:
-            # Standard Mode Prompt
+            # Standard mode Prompt
             prompt_template = (
                 "You are controlling a Franka single-arm robot. Your task is to adjust the end effector (EEF) poses at 30Hz to complete a specified task. "
                 "You need to output control tokens that can be decoded into a 30×7 action sequence. The sequence has 30 consecutive actions, each with 7 dimensions. "
@@ -241,7 +241,7 @@ def infer_api():
         text_prompt = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = processor(text=[text_prompt], images=images_pil, padding=True, return_tensors="pt").to(model.device)
 
-        # --- 模型推理 ---
+        # --- Model Inference ---
         gen_kwargs = {
             "max_new_tokens": 768, "do_sample": True, "temperature": 0.2,
             "pad_token_id": processor.tokenizer.pad_token_id, "eos_token_id": processor.tokenizer.eos_token_id,
@@ -253,11 +253,11 @@ def infer_api():
         input_length = inputs.input_ids.shape[1]
         output_tokens = output_ids[input_length:].detach().cpu().tolist()
 
-        # --- 输出解析 ---
+        # --- Output Parsing ---
         subtask_result = "N/A"
         if SUBTASK_MODE:
             try:
-                # 使用 <boa> (151665) token 分割子任务和动作
+                # Use <boa> (151665) token to split subtask and action
                 boa_token = 151665
                 split_index = output_tokens.index(boa_token)
                 subtask_tokens = output_tokens[:split_index]
@@ -272,19 +272,19 @@ def infer_api():
             action_tokens_raw = output_tokens
 
         try:
-            # 查找 <eoa> (151667) token 作为动作结束标志
+            # Find <eoa> (151667) token as action end flag
             eoa_token = 151667
             end_index = action_tokens_raw.index(eoa_token)
             action_tokens_raw = action_tokens_raw[:end_index]
         except ValueError:
             logger.warning("<eoa> token not found, using complete output sequence.")
 
-        # 提取并解码动作
+        # Extract and decode actions
         action_ids = [t - 149595 for t in action_tokens_raw if 149595 <= t < 151643]
         actions_norm, _ = action_tokenizer._extract_actions_from_tokens([action_ids], action_horizon=30, action_dim=7)
         delta_actions = actions_norm[0]
 
-        # --- 动作后处理 ---
+        # --- Action Post-processing ---
         if delta_actions is None or action_stats is None:
              raise ValueError("Action decoding failed or normalization statistics not loaded")
 
@@ -292,17 +292,17 @@ def infer_api():
         offset = np.array(action_stats['action.eepose']['offset_'])
         delta_actions_denorm = inverse_transform(np.array(delta_actions), scale, offset)
         
-        # 保存用于调试的动作日志
+        # Save action log for debugging
         with open(f'/share/project/dumengfei/code/real_eval/action_log/franka_action.json', 'w') as f:
             json.dump(delta_actions_denorm.tolist(), f)
 
-        # 计算绝对姿态序列
+        # Calculate absolute pose sequence
         final_ee_actions = []
         current_eef_pose = eef_pose.copy()
         for i in range(30):
-            current_eef_pose[:3] += delta_actions_denorm[i][:3]  # 位置更新
-            current_eef_pose[3:7] = add_delta_to_quat_pose(current_eef_pose[3:7], delta_actions_denorm[i][3:6]) # 姿态更新
-            current_eef_pose[7] = np.clip(delta_actions_denorm[i][6], 0, 1) # 夹爪更新
+            current_eef_pose[:3] += delta_actions_denorm[i][:3]  # Position update
+            current_eef_pose[3:7] = add_delta_to_quat_pose(current_eef_pose[3:7], delta_actions_denorm[i][3:6]) # Pose update
+            current_eef_pose[7] = np.clip(delta_actions_denorm[i][6], 0, 1) # Gripper update
             final_ee_actions.append(current_eef_pose.tolist())
 
         processing_time = time.time() - start_time
@@ -322,7 +322,7 @@ def infer_api():
         logger.error(f"Severe error during inference: {e}", exc_info=True)
         return jsonify({"success": False, "error": str(e)}), 500
 
-# --- 主程序入口 ---
+# --- Main Program Entry ---
 if __name__ == '__main__':
     if not load_model():
         sys.exit(1)
