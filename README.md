@@ -60,6 +60,9 @@ We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology f
 <div align="center">
 <img src="./assets/demo_01.png", width=750 />
 </div>
+<div align="center">
+<img src="./assets/sat.png", width=750 />
+</div>
 
 ## ⭐️ Architecture
 This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based on RoboBrain 2.0, the model is trained on a large amount of real-world robotics data and embodied reasoning data, enabling it to possess general robotic manipulation capabilities. The action token sequences output by the model are converted into underlying robot control signals through our proprietary action tokenizer. Model details are as follows:
