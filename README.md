@@ -67,10 +67,12 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 
 
 ## ⭐️ Architecture
-**RoboBrain 2.0** supports ***multi-image***, ***long video***, and ***high-resolution visual inputs***, along with complex task instructions and structured ***scene graphs*** on the language side. Visual inputs are processed via a Vision Encoder and MLP Projector, while textual inputs are tokenized into a unified token stream. All inputs are fed into a ***LLM Decoder*** that performs ***long-chain-of-thought reasoning*** and outputs structured plans, spatial relations, and both ***relative*** and ***absolute coordinates***.
+This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based on RoboBrain 2.0, the model is trained on a large amount of real-world robotics data and embodied reasoning data, enabling it to possess general robotic manipulation capabilities. The action token sequences output by the model are converted into underlying robot control signals through our proprietary action tokenizer. Model details are as follows:
+- **Multimodal Input**: The model accepts single-image, multi-image, and text input (covering pointing task scenarios, object maneuverability scenarios, trajectory scenarios, and subtask execution scenarios), and produces outputs of varying dimensions based on the input scenarios.
+- **Action Generation and Execution**: After model processing, OmniSAT converts these into multi-degree-of-freedom (DoF) action sequences, ultimately driving the robot to complete the operation.
 
 <div align="center">
-<img src="./assets/arch.png" />
+<img src="./assets/RoboBrain-X_2.pdf" />
 </div>
 
 
@@ -79,21 +81,19 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 
 | Models               | Checkpoint                                                     | Description                                                | 
 |----------------------|----------------------------------------------------------------|------------------------------------------------------------|
-| RoboBrain 2.0 3B     | [🤗 BAAI/RoboBrain2.0-3B](https://huggingface.co/BAAI/RoboBrain2.0-3B)   | 3B parameter version of the RoboBrain2.0                 | 
-| RoboBrain 2.0 7B     | [🤗 BAAI/RoboBrain2.0-7B](https://huggingface.co/BAAI/RoboBrain2.0-7B)   | 7B parameter version of the RoboBrain2.0                 | 
-| RoboBrain 2.0 32B    | [🤗 BAAI/RoboBrain2.0-32B](https://huggingface.co/BAAI/RoboBrain2.0-32B) | 32B parameter version of the RoboBrain2.0                |
+| RoboBrain-X 1.0-preview     | [🤗 BAAI/RoboBrain-X-Preview](https://huggingface.co/BAAI/RoboBrain-X-Preview)  | preview version of the RoboBrain-X                  | 
 
 
 ## 🛠️ Setup
 
 ```bash
 # clone repo.
-git clone https://github.com/FlagOpen/RoboBrain2.0.git
-cd RoboBrain
+git clone https://github.com/FlagOpen/RoboBrain-X.git
+cd RoboBrain-X
 
 # build conda env.
-conda create -n robobrain2 python=3.10
-conda activate robobrain2
+conda create -n robobrainX python=3.10
+conda activate robobrainX
 pip install -r requirements.txt
 ```
 
