@@ -37,7 +37,7 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 
 
 <div style="display: flex; justify-content: center;">
-  <img src="./assets/Sim_Result.png" style="width: 90%;" />
+  <img src="./assets/Sim_Result.png" style="width: 90%; height: 500px;" />
 </div>
 
 <div style="display: flex; justify-content: center;">
