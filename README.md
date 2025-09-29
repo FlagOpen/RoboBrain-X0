@@ -30,7 +30,7 @@
 💬 ***If you have any questions, feel free to contact us via WeChat or RedNote.***
 
 <div align="center">
-<img src="./assets/wechat.png", width=750 />
+<img src="./assets/wechat.jpg", width=750 />
 </div>
 
 ## 🔥 Overview
