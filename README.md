@@ -10,7 +10,7 @@
 
 </p>
 <p align="center">
-        </a>&nbsp&nbsp📖 <a href="">Wisemodel</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="">Technical Report</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="./assets/wechat.png">WeChat & RedNote</a>
+        </a>&nbsp&nbsp📖 <a href="">Wisemodel</a>&nbsp&nbsp | &nbsp&nbsp📑 <a href="">Technical Report</a>&nbsp&nbsp | &nbsp&nbsp💬 <a href="./assets/wechat.jpg">WeChat & RedNote</a>
 </p>
 
 </p>
