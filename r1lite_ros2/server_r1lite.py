@@ -42,9 +42,7 @@ from PIL import Image
 import cv2
 from scipy.spatial.transform import Rotation as R
 
-# Add external library path to sys.path
-sys.path.append("/share/project/dumengfei/code/sim_data_process")
-from pose_transform import add_delta_to_quat_pose
+from utils.pose_transform import add_delta_to_quat_pose
 from action_token.action_chunk_to_fast_token import ActionChunkProcessor
 
 # --- Service Configuration ---

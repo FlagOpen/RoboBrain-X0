@@ -7,7 +7,7 @@ returning predicted dual-arm action sequences.
 
 Supports two operation modes:
 1. Standard Mode (SUBTASK_MODE = False): The model directly outputs control actions.
-2. Subtask Mode (SUBTASK_MODE = True): The model first generates a text description of a subtask, then outputs corresponding control actions.
+2. Subtask Mode (SUBTASK_MODE = True): The model first generates a text description of a extremetask, then outputs corresponding control actions.
 
 Switch modes and models by modifying the `SUBTASK_MODE` and `MODEL_PATH` global variables below.
 
@@ -38,9 +38,7 @@ from flask_cors import CORS
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 from PIL import Image
 
-# 将外部代码库路径添加到sys.path
-sys.path.append("/share/project/dumengfei/code/sim_data_process")
-from pose_transform import add_delta_to_euler_pose
+from utils.pose_transform import add_delta_to_euler_pose
 from action_token.action_chunk_to_fast_token import ActionChunkProcessor
 
 # --- Service Configuration ---
@@ -123,7 +121,7 @@ def inverse_transform(x_norm, scale, offset):
 
 # Load action normalization statistics
 try:
-    # Note: Depending on the model, different statistics files may need to be loaded
+    # Note: Different models may require loading different statistics files
     if SUBTASK_MODE:
         stats_file = "/share/project/dumengfei/code/pretrain_data_process/real_data/agilex/demo_0920/agilex_normal_0921_30Hz.json"
     else:
@@ -216,9 +214,9 @@ def infer_api():
         eef_pose = np.array(data['eef_pose']) # shape (1, 14)
         images_pil = process_images(images)
 
-        # --- Prompt Generation ---
+        # --- Prompt 生成 ---
         if SUBTASK_MODE:
-            # Subtask mode Prompt
+            # 子任务模式 Prompt
             prompt_template = (
                 "You are controlling an Agilex dual-arm robot. Your task is to adjust the end effector poses (EEPose) at 30Hz to complete a specified task. "
                 "Your output must include two components: 1. Immediate sub-task: The specific action you will execute first to progress toward the overall task; 2. Control tokens: These will be decoded into a 30×14 action sequence to implement the sub-task. "
@@ -227,7 +225,7 @@ def infer_api():
                 "Your current visual inputs are: robot front image"
             )
         else:
-            # Standard mode Prompt
+            # 标准模式 Prompt
             prompt_template = (
                 "You are controlling an Agilex dual-arm robot. Your task is to adjust the end effector poses (EEPose) at 30Hz to complete a specified task. "
                 "You need to output control tokens that can be decoded into a 30×14 action sequence. The sequence has 30 consecutive actions, each with 14 dimensions. "
@@ -250,7 +248,7 @@ def infer_api():
         text_prompt = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = processor(text=[text_prompt], images=images_pil, padding=True, return_tensors="pt").to(model.device)
 
-        # --- Model Inference ---
+        # --- 模型推理 ---
         gen_kwargs = {
             "max_new_tokens": 768, "do_sample": False, "temperature": 0.0,
             "pad_token_id": processor.tokenizer.pad_token_id, "eos_token_id": processor.tokenizer.eos_token_id,
@@ -262,7 +260,7 @@ def infer_api():
         input_length = inputs.input_ids.shape[1]
         output_tokens = output_ids[input_length:].detach().cpu().tolist()
 
-        # --- Output Parsing ---
+        # --- 输出解析 ---
         subtask_result = "N/A"
         if SUBTASK_MODE:
             try:
@@ -290,7 +288,7 @@ def infer_api():
         actions_norm, _ = action_tokenizer._extract_actions_from_tokens([action_ids], action_horizon=30, action_dim=14)
         delta_actions = actions_norm[0]
         
-        # --- Action Post-processing ---
+        # --- 动作后处理 ---
         if delta_actions is None or action_stats is None:
              raise ValueError("Action decoding failed or action normalization statistics not loaded")
 
@@ -298,15 +296,15 @@ def infer_api():
         offset = np.array(action_stats['action.eepose']['offset_'])
         delta_actions_denorm = inverse_transform(np.array(delta_actions), scale, offset)
         
-        # Calculate absolute pose sequence
+        # 计算绝对姿态序列
         final_ee_actions = []
         current_eef_pose = eef_pose.squeeze().copy()
         for i in range(30):
-            # Right arm update
+            # 右臂更新
             current_eef_pose[:3] += delta_actions_denorm[i][:3]
             current_eef_pose[3:6] = add_delta_to_euler_pose(current_eef_pose[3:6], delta_actions_denorm[i][3:6])
             current_eef_pose[6] = delta_actions_denorm[i][6]
-            # Left arm update
+            # 左臂更新
             current_eef_pose[7:10] += delta_actions_denorm[i][7:10]
             current_eef_pose[10:13] = add_delta_to_euler_pose(current_eef_pose[10:13], delta_actions_denorm[i][10:13])
             current_eef_pose[13] = delta_actions_denorm[i][13]
