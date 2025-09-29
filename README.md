@@ -107,7 +107,8 @@ conda activate flagscale-train
 python run.py \
   --config-path ./examples/qwen2_5_vl/conf \
   --config-name train_3b_action_S6_subtask_agilex_eval5_demo \
-  action=run```
+  action=run
+```
 
 ## 🔍 Evaluation
 
