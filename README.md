@@ -27,7 +27,7 @@
 💬 ***If you have any questions, feel free to contact us via WeChat or RedNote.***
 
 <div style="display: flex; justify-content: center;">
-  <img src="./assets/wechat.jpg" style="width: 90%;" />
+  <img src="./assets/wechat.jpeg" style="width: 90%;" />
 </div>
 
 ## 🔥 Overview
