@@ -79,20 +79,22 @@ This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based 
 ## 🛠️ Setup
 
 ```bash
-# clone repo.
-git clone https://github.com/FlagOpen/RoboBrain-X0.git
-cd RoboBrain-X0
+# Pull Docker Image.
+docker pull ghcr.io/robobrain-roboos-robotic/robotics_pretrain_flagscale:cuda12.4.1-cudnn9.5.0-python3.12-torch2.6.0-time250928-ssh
 
-# build conda env.
-conda create -n robobrainX python=3.10
-conda activate robobrainX
-pip install -r requirements.txt
+# Run Container.
+docker run -itd --name robotics_pretrain --privileged --gpus all --net=host --ipc=host --device=/dev/infiniband --shm-size 512g --ulimit memlock=-1 -v /nfs/hcr/models/:/models ghcr.io/robobrain-roboos-robotic/robotics_pretrain_flagscale:cuda12.4.1-cudnn9.5.0-python3.12-torch2.6.0-time250928-ssh
 ```
 
 
 ## 💡 Simple Inference
 
 ## 🤖 Training
+```bash
+cd /root/robotics_pretrain/flag-scale
+conda activate flagscale-train
+python run.py --config-path ./examples/qwen2_5_vl/conf --config-name train_3b_action_S6_subtask_agilex_eval5_demo action=run
+```
 
 ## 🔍 Evaluation
 
