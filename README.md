@@ -79,7 +79,7 @@ This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based 
 
 | Models               | Checkpoint                                                     | Description                                                | 
 |----------------------|----------------------------------------------------------------|------------------------------------------------------------|
-| RoboBrain-X0-preview     | [🤗 BAAI/RoboBrain-X0-Preview(9.30)](https://huggingface.co/cmyopu/RoboBrain-X0-Preview)  | preview version of the RoboBrain-X0                  | 
+| RoboBrain-X0-preview     | [🤗 BAAI/RoboBrain-X0-Preview](https://huggingface.co/cmyopu/RoboBrain-X0-Preview)  | preview version of the RoboBrain-X0                  | 
 | RoboBrain-X0-FlagOS     | [🤗 FlagRelease/RoboBrain-X0-FlagOS](https://huggingface.co/FlagRelease/RoboBrain-X0-FlagOS)  | multi-chip version of the RoboBrain-X0                  | 
 | RoboBrain-X0-FlagOS     | [🤗 BAAI/RoboBrain-X0-Dataset(9.30)](https://huggingface.co/datasets/BAAI/RoboBrain-X0-Dataset)  | training dataset of RoboBrain-X0                  | 
 
