@@ -49,7 +49,7 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 </div> -->
 
 ## 🗞️ News
-- **`2025-09-29`**: 🔥 [**RoboBrain-X-preview 1.0**](http://arxiv.org/abs/2502.21257/) was released.
+- **`2025-09-29`**: 🔥 [**RoboBrain-X-preview 1.0**](https://huggingface.co/BAAI/RoboBrain-X-Preview) was released.
 
 
 ## 📆 Todo
@@ -61,9 +61,9 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 ## 🚀 Features
 **RoboBrain-X** supports the unified modeling of heterogeneous ontologies and offers zero-shot generalization and complex task decomposition capabilities. Building on RoboBrain's multimodal foundation, RoboBrain-X further integrates real-world robot motion data based on RoboBrain-2.0 data. By unifying vision, language, and motion modeling, it achieves cross-ontology generalization and adaptation, providing integrated capabilities from perception to execution.
 
-<div align="center">
+<!-- <div align="center">
 <img src="./assets/visualization.png" />
-</div>
+</div> -->
 
 
 ## ⭐️ Architecture
