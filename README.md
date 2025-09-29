@@ -64,7 +64,7 @@ This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based 
 - **Action Generation and Execution**: After model processing, OmniSAT converts these into multi-degree-of-freedom (DoF) action sequences, ultimately driving the robot to complete the operation.
 
 <div align="center">
-<img src="./assets/RoboBrain-X0.jpg" />      
+<img src="./assets/RoboBrain-X0.jpg" width="750" />      
 </div>
 
 
