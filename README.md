@@ -119,7 +119,8 @@ python run.py \
 ```
 
 ## 🔍 Evaluation
-
+The evaluation on real robots adopts a "server-client" architecture, with a PC acting as a data transfer hub: the model is deployed on a remote server (responsible for inference), while the client (running on the robot side) sends the robot's state to the server. After the model performs inference, it returns the generated action results to the client, which then controls the robot to execute these actions.
+Inference code examples are provided for four robot platforms: A2D, Franka, Agilex, and R1lite (ROS1 and ROS2 version).
 
 
 
