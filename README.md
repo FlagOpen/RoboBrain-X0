@@ -2,11 +2,11 @@
 <img src="./assets/RoboBrain-X.png" width="450"/>
 </div>
 
-# RoboBrain-X: A Unified Cross-Embodiment Vision-Language-Action Model for Token Reasoning and Action Generation. 
+# RoboBrain-X0: A Unified Cross-Embodiment Vision-Language-Action Model for Token Reasoning and Action Generation. 
 
 
 <p align="center">
-        </a>&nbsp&nbsp⭐️ <a href="https://superrobobrain.github.io/">Project</a></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/BAAI/RoboBrain-X-Preview">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://www.modelscope.cn/models/BAAI/RoboBrain2.0-7B/files/">ModelScope</a>&nbsp&nbsp 
+        </a>&nbsp&nbsp⭐️ <a href="https://superrobobrain.github.io/">Project</a></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/BAAI/RoboBrain-X0-Preview">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://www.modelscope.cn/models/BAAI/RoboBrain2.0-7B/files/">ModelScope</a>&nbsp&nbsp 
 
 <!-- </p>
 <p align="center">
@@ -35,7 +35,7 @@
 </div>
 
 ## 🔥 Overview
-We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology foundation model designed to overcome the limitations of single-robot systems in heterogeneous ontology transfer. By leveraging End-Effector pose representation in SE(3) task space, coupled with a Unified Action Vocabulary (UAV) and action tokenizer, RoboBrain-X achieves efficient zero-shot generalization and complex task decomposition. Its Grouped Residual Quantizer (GRVQ) maps continuous control sequences from diverse degrees of freedom and mechanical structures to a shared discrete action primitive space, ensuring semantic consistency and transferability across ontologies such as **AgileX**, **R1-Lite dual-arm wheeled robots**, and **Franka single-arm systems**. Through ontology-conditioned diverse prompting, the model supports flexible decoding from multi-view RGB-D inputs to specific executions, significantly reducing training and inference overhead. RoboBrain-X delivers state-of-the-art performance in embodied reasoning tasks, laying a robust foundation for developing versatile, real-world robotic agents and advancing embodied intelligence research.
+We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology foundation model designed to overcome the limitations of single-robot systems in heterogeneous ontology transfer. By leveraging End-Effector pose representation in SE(3) task space, coupled with a Unified Action Vocabulary (UAV) and action tokenizer, RoboBrain-X0 achieves efficient zero-shot generalization and complex task decomposition. Its Grouped Residual Quantizer (GRVQ) maps continuous control sequences from diverse degrees of freedom and mechanical structures to a shared discrete action primitive space, ensuring semantic consistency and transferability across ontologies such as **AgileX**, **R1-Lite dual-arm wheeled robots**, and **Franka single-arm systems**. Through ontology-conditioned diverse prompting, the model supports flexible decoding from multi-view RGB-D inputs to specific executions, significantly reducing training and inference overhead. RoboBrain-X0 delivers state-of-the-art performance in embodied reasoning tasks, laying a robust foundation for developing versatile, real-world robotic agents and advancing embodied intelligence research.
 
 
 <div style="display: flex; justify-content: center;">
@@ -49,17 +49,17 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 
 
 ## 🗞️ News
-- **`2025-09-29`**: 🔥 [**RoboBrain-X-preview 1.0**](https://huggingface.co/BAAI/RoboBrain-X-Preview) was released.
+- **`2025-09-29`**: 🔥 [**RoboBrain-X0-preview**](https://huggingface.co/BAAI/RoboBrain-X0-Preview) was released.
 
 
 ## 📆 Todo
-- [x] Release model checkpoint for RoboBrain-X-Preview
-- [ ] Release quick inference example for RoboBrain-X
-- [ ] Release training and evaluation codes for RoboBrain-X
+- [x] Release model checkpoint for RoboBrain-X0-Preview
+- [ ] Release quick inference example for RoboBrain-X0
+- [ ] Release training and evaluation codes for RoboBrain-X0
 
 
 ## 🚀 Features
-**RoboBrain-X** supports the unified modeling of heterogeneous ontologies and offers zero-shot generalization and complex task decomposition capabilities. Building on RoboBrain's multimodal foundation, RoboBrain-X further integrates real-world robot motion data based on RoboBrain-2.0 data. By unifying vision, language, and motion modeling, it achieves cross-ontology generalization and adaptation, providing integrated capabilities from perception to execution.
+**RoboBrain-X0** supports the unified modeling of heterogeneous ontologies and offers zero-shot generalization and complex task decomposition capabilities. Building on RoboBrain's multimodal foundation, RoboBrain-X0 further integrates real-world robot motion data based on RoboBrain-2.0 data. By unifying vision, language, and motion modeling, it achieves cross-ontology generalization and adaptation, providing integrated capabilities from perception to execution.
 
 
 ## ⭐️ Architecture
@@ -77,15 +77,15 @@ This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based 
 
 | Models               | Checkpoint                                                     | Description                                                | 
 |----------------------|----------------------------------------------------------------|------------------------------------------------------------|
-| RoboBrain-X 1.0-preview     | [🤗 BAAI/RoboBrain-X-Preview](https://huggingface.co/BAAI/RoboBrain-X-Preview)  | preview version of the RoboBrain-X                  | 
+| RoboBrain-X0-preview     | [🤗 BAAI/RoboBrain-X0-Preview](https://huggingface.co/BAAI/RoboBrain-X0-Preview)  | preview version of the RoboBrain-X0                  | 
 
 
 ## 🛠️ Setup
 
 ```bash
 # clone repo.
-git clone https://github.com/FlagOpen/RoboBrain-X.git
-cd RoboBrain-X
+git clone https://github.com/FlagOpen/RoboBrain-X0.git
+cd RoboBrain-X0
 
 # build conda env.
 conda create -n robobrainX python=3.10
