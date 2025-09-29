@@ -49,9 +49,9 @@ We are thrilled to introduce **RoboBrain-X**, a groundbreaking cross-ontology fo
 
 
 ## 📆 Todo
-- [x] Release model checkpoint for RoboBrain-X-preview-3B
-- [ ] Release quick inference example for RoboBrain-X-3B
-- [ ] Release training and evaluation codes for RoboBrain-X-3B
+- [x] Release model checkpoint for RoboBrain-X-Preview
+- [ ] Release quick inference example for RoboBrain-X
+- [ ] Release training and evaluation codes for RoboBrain-X
 
 
 ## 🚀 Features
