@@ -30,9 +30,6 @@
 
 💬 ***If you have any questions, feel free to contact us via WeChat or RedNote.***
 
-<!-- <div style="display: flex; justify-content: center;">
-  <img src="./assets/wechat.jpeg" style="width: 100%;" />
-</div> -->
 <div align="center">
 <img src="./assets/wechat.jpeg", width=750 />
 </div>
