@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-RoboBrain Robotics API 服务 - Franka Panda
+RoboBrain Robotics API Service - Franka Panda
 
-该服务提供一个HTTP接口，用于接收机器人状态和图像，并使用预训练的视觉语言模型进行推理，
-返回预测的机器人动作序列。
+This service provides an HTTP interface to receive robot state and images, and uses a pre-trained vision-language model for inference,
+returning predicted robot action sequences.
 
-支持两种操作模式：
-1. 标准模式 (SUBTASK_MODE = False): 模型直接输出控制动作。
-2. 子任务模式 (SUBTASK_MODE = True): 模型首先生成一个文本描述的子任务，然后输出相应的控制动作。
+Supports two operation modes:
+1. Standard Mode (SUBTASK_MODE = False): The model directly outputs control actions.
+2. Subtask Mode (SUBTASK_MODE = True): The model first generates a text description of a subtask, then outputs corresponding control actions.
 
-通过修改下面的 `SUBTASK_MODE` 和 `MODEL_PATH` 全局变量来切换模式和模型。
+Switch modes and models by modifying the `SUBTASK_MODE` and `MODEL_PATH` global variables below.
 
-POST /infer 输入样例：
+POST /infer Input Example:
 {
-  "eef_pose": [0.1, 0.2, ..., 0.3],      # shape: [8]，当前末端执行器姿态 [x, y, z, qx, qy, qz, qw, gripper]
-  "instruction": "请将桌上的苹果放入篮子",
+  "eef_pose": [0.1, 0.2, ..., 0.3],
+  "instruction": "Please put the apple on the table into the basket",
   "images": {
-      "cam_front": "<base64字符串>",
-      "cam_wrist": "<base64字符串>"
+      "cam_front": "<base64 string>",
+      "cam_wrist": "<base64 string>"
   }
 }
 """
@@ -90,10 +90,10 @@ def get_tokenizer(max_len: int) -> ActionChunkProcessor:
     return tok
 
 def load_model():
-    """加载并初始化模型和处理器"""
+    """Load and initialize the model and processor"""
     global model, processor, action_tokenizer
     try:
-        logger.info(f"开始加载模型: {MODEL_PATH} (Subtask Mode: {SUBTASK_MODE})")
+        logger.info(f"Loading model: {MODEL_PATH} (Subtask Mode: {SUBTASK_MODE})")
         device_id = os.environ.get("EGL_DEVICE_ID", "0")
         device = f"cuda:{device_id}" if torch.cuda.is_available() else "cpu"
 
@@ -109,16 +109,16 @@ def load_model():
         action_tokenizer = get_tokenizer(max_len=256)
 
         if torch.cuda.is_available():
-            logger.info(f"模型已成功加载到 GPU: {torch.cuda.get_device_name()}")
+            logger.info(f"Model successfully loaded to GPU: {torch.cuda.get_device_name()}")
         else:
-            logger.info("模型已成功加载到 CPU")
+            logger.info("Model successfully loaded to CPU")
         return True
     except Exception as e:
-        logger.error(f"模型加载失败: {e}", exc_info=True)
+        logger.error(f"Model loading failed: {e}", exc_info=True)
         return False
 
 def inverse_transform(x_norm, scale, offset):
-    """根据均值和标准差对动作进行反归一化"""
+    """Denormalize actions based on mean and standard deviation"""
     x_norm = np.asarray(x_norm)
     return (x_norm - offset) / scale
 
@@ -127,40 +127,40 @@ try:
     with open("/share/project/dumengfei/code/pretrain_data_process/real_data/franka/franka_data_pnp_0922/normal_stats_all_action10Hz_original.json", 'r') as f:
         action_stats = json.load(f)
 except FileNotFoundError:
-    logger.error("动作归一化统计文件未找到！服务可能无法正确执行反归一化。")
+    logger.error("Action normalization statistics file not found! The service may not perform denormalization correctly.")
     action_stats = None
 
 def decode_image_base64_to_pil(image_base64: str) -> Image:
-    """将Base64编码的图片字符串解码为PIL Image对象"""
+    """Decode Base64 encoded image string to PIL Image object"""
     try:
         image_data = base64.b64decode(image_base64)
         return Image.open(io.BytesIO(image_data)).convert('RGB')
     except Exception as e:
-        logger.error(f"图片解码失败: {e}")
-        raise ValueError("无效的Base64图片字符串")
+        logger.error(f"Image decoding failed: {e}")
+        raise ValueError("Invalid Base64 image string")
 
 def process_images(images_dict: dict) -> list:
-    """处理输入的图像字典，返回一个PIL Image列表"""
+    """Process input image dictionary, return a list of PIL Images"""
     try:
         image_keys = ['cam_front', 'cam_wrist']
         processed_list = [decode_image_base64_to_pil(images_dict[k]).resize((320, 240)) for k in image_keys]
-        # 保存图像用于调试
+        # Save images for debugging
         for key, img in zip(image_keys, processed_list):
             img.save(f'/share/project/dumengfei/code/real_eval/image_log/franka_{key}.png')
         return processed_list
     except KeyError as e:
-        raise ValueError(f"缺少必需的图像: {e}")
+        raise ValueError(f"Missing required image: {e}")
     except Exception as e:
-        logger.error(f"处理图片时发生错误: {e}")
-        raise ValueError("图片处理失败")
+        logger.error(f"Error processing images: {e}")
+        raise ValueError("Image processing failed")
 
 # --- Flask API 端点 ---
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    """健康检查端点，返回服务和模型状态"""
+    """Health check endpoint, returns service and model status"""
     if model is None or processor is None:
-        return jsonify({"status": "error", "message": "模型未加载"}), 503
+        return jsonify({"status": "error", "message": "Model not loaded"}), 503
     
     gpu_info = {}
     if torch.cuda.is_available():
@@ -180,7 +180,7 @@ def health_check():
 
 @app.route('/info', methods=['GET'])
 def service_info():
-    """提供服务元信息"""
+    """Provide service metadata"""
     return jsonify({
         "service_name": "RoboBrain Robotics API for Franka",
         "version": "2.0.0",
@@ -195,15 +195,15 @@ def service_info():
 
 @app.route('/infer', methods=['POST'])
 def infer_api():
-    """核心推理API端点"""
+    """Core inference API endpoint"""
     start_time = time.time()
     
     if model is None:
-        return jsonify({"success": False, "error": "模型未加载，请检查服务状态"}), 503
+        return jsonify({"success": False, "error": "Model not loaded, please check service status"}), 503
     
     data = request.get_json()
     if not data or 'eef_pose' not in data or 'instruction' not in data or 'images' not in data:
-        return jsonify({"success": False, "error": "请求数据不完整或格式错误"}), 400
+        return jsonify({"success": False, "error": "Request data is incomplete or in the wrong format"}), 400
 
     try:
         instruction = data['instruction']
@@ -213,7 +213,7 @@ def infer_api():
 
         # --- Prompt 生成 ---
         if SUBTASK_MODE:
-            # 子任务模式 Prompt
+            # Subtask Mode Prompt
             prompt_template = (
                 "You are controlling a Franka single-arm robot. Your task is to adjust the end effector (EEF) poses at 30Hz to complete a specified task. "
                 "Your output must include two components: 1. Immediate sub-task: The specific action you will execute first to progress toward the overall task; 2. Control tokens: These will be decoded into a 30×7 action sequence to implement the sub-task. "
@@ -221,7 +221,7 @@ def infer_api():
                 "Your current visual inputs are robot front image"
             )
         else:
-            # 标准模式 Prompt
+            # Standard Mode Prompt
             prompt_template = (
                 "You are controlling a Franka single-arm robot. Your task is to adjust the end effector (EEF) poses at 30Hz to complete a specified task. "
                 "You need to output control tokens that can be decoded into a 30×7 action sequence. The sequence has 30 consecutive actions, each with 7 dimensions. "
@@ -263,11 +263,11 @@ def infer_api():
                 subtask_tokens = output_tokens[:split_index]
                 action_tokens_raw = output_tokens[split_index + 1:]
                 subtask_result = processor.tokenizer.decode(subtask_tokens, skip_special_tokens=True).strip()
-                logger.info(f"解析到子任务: {subtask_result}")
+                logger.info(f"Parsed subtask: {subtask_result}")
             except ValueError:
-                logger.warning("未找到 <boa> token，无法解析子任务。将整个输出视为动作。")
+                logger.warning("<boa> token not found, unable to parse subtask. Treating entire output as action.")
                 action_tokens_raw = output_tokens
-                subtask_result = "解析失败: 未找到 <boa> token"
+                subtask_result = "Parsing failed: <boa> token not found"
         else:
             action_tokens_raw = output_tokens
 
@@ -277,7 +277,7 @@ def infer_api():
             end_index = action_tokens_raw.index(eoa_token)
             action_tokens_raw = action_tokens_raw[:end_index]
         except ValueError:
-            logger.warning("未找到 <eoa> token，使用完整输出序列。")
+            logger.warning("<eoa> token not found, using complete output sequence.")
 
         # 提取并解码动作
         action_ids = [t - 149595 for t in action_tokens_raw if 149595 <= t < 151643]
@@ -286,7 +286,7 @@ def infer_api():
 
         # --- 动作后处理 ---
         if delta_actions is None or action_stats is None:
-             raise ValueError("动作解码失败或归一化统计数据未加载")
+             raise ValueError("Action decoding failed or normalization statistics not loaded")
 
         scale = np.array(action_stats['action.eepose']['scale_'])
         offset = np.array(action_stats['action.eepose']['offset_'])
@@ -306,7 +306,7 @@ def infer_api():
             final_ee_actions.append(current_eef_pose.tolist())
 
         processing_time = time.time() - start_time
-        logger.info(f"推理完成, 耗时: {processing_time:.2f}秒. 模式: {'Subtask' if SUBTASK_MODE else 'Standard'}")
+        logger.info(f"Inference completed, time taken: {processing_time:.2f} seconds. Mode: {'Subtask' if SUBTASK_MODE else 'Standard'}")
         
         response = {
             "success": True,
@@ -319,7 +319,7 @@ def infer_api():
         return jsonify(response)
 
     except Exception as e:
-        logger.error(f"推理过程中发生严重错误: {e}", exc_info=True)
+        logger.error(f"Severe error during inference: {e}", exc_info=True)
         return jsonify({"success": False, "error": str(e)}), 500
 
 # --- 主程序入口 ---
@@ -327,9 +327,9 @@ if __name__ == '__main__':
     if not load_model():
         sys.exit(1)
     
-    logger.info("RoboBrain Franka API 服务启动中...")
-    logger.info(f"服务地址: http://{SERVICE_CONFIG['host']}:{SERVICE_CONFIG['port']}")
-    logger.info(f"当前模式: {'Subtask' if SUBTASK_MODE else 'Standard'}")
+    logger.info("RoboBrain Franka API service starting...")
+    logger.info(f"Service address: http://{SERVICE_CONFIG['host']}:{SERVICE_CONFIG['port']}")
+    logger.info(f"Current mode: {'Subtask' if SUBTASK_MODE else 'Standard'}")
     
     app.run(
         host=SERVICE_CONFIG['host'],
