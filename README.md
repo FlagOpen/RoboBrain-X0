@@ -6,7 +6,7 @@
 
 
 <p align="center">
-        </a>&nbsp&nbsp⭐️ <a href="https://superrobobrain.github.io/">Project</a></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/collections/BAAI/robobrain20-6841eeb1df55c207a4ea0036/">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://www.modelscope.cn/models/BAAI/RoboBrain2.0-7B/files/">ModelScope</a>&nbsp&nbsp 
+        </a>&nbsp&nbsp⭐️ <a href="https://superrobobrain.github.io/">Project</a></a>&nbsp&nbsp | &nbsp&nbsp🤗 <a href="https://huggingface.co/BAAI/RoboBrain-X-Preview">Hugging Face</a>&nbsp&nbsp | &nbsp&nbsp🤖 <a href="https://www.modelscope.cn/models/BAAI/RoboBrain2.0-7B/files/">ModelScope</a>&nbsp&nbsp 
 
 <!-- </p>
 <p align="center">
@@ -21,7 +21,7 @@
 </a>&nbsp&nbsp⭐️ <a href="https://github.com/tanhuajie/Reason-RFT">Reason-RFT</a>: Core Post-Training Strategy for Embodied Visual Reasoning in RoboBrain2.0.
 </p>
 <p align="center">
-</a>&nbsp&nbsp🌍 <a href="https://github.com/FlagOpen/RoboBrain">RoboBrain 1.0</a>: A Unified Brain Model for Robotic Manipulation from Abstract to Concrete.
+</a>&nbsp&nbsp🌍 <a href="https://github.com/FlagOpen/RoboBrain2.0">RoboBrain 2.0</a>: See Better. Think Harder. Do Smarter. 
 </p>
 
 💬 ***If you have any questions, feel free to contact us via WeChat or RedNote.***
@@ -102,6 +102,13 @@ pip install -r requirements.txt
 ## 📑 Citation
 If you find this project useful, welcome to cite us.
 ```bib
+@article{RoboBrain1.0,
+    title={Robobrain: A unified brain model for robotic manipulation from abstract to concrete},
+    author={Ji, Yuheng and Tan, Huajie and Shi, Jiayu and Hao, Xiaoshuai and Zhang, Yuan and Zhang, Hengyuan and Wang, Pengwei and Zhao, Mengdi and Mu, Yao and An, Pengju and others},
+    journal={arXiv preprint arXiv:2502.21257},
+    year={2025}
+}
+
 @article{RoboBrain2.0TechnicalReport,
     title={RoboBrain 2.0 Technical Report},
     author={BAAI RoboBrain Team},
