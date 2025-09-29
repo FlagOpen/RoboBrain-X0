@@ -39,13 +39,9 @@ We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology f
 
 
 <div style="display: flex; justify-content: center;">
-  <img src="./assets/Sim_Result.png" style="width: 90%; height: 500px;" />
+  <img src="./assets/Eval_Result.jpg" style="width: 90%; height: 500px;" />
 </div>
 
-<div style="display: flex; justify-content: center;">
-  <img src="./assets/Real_Result1.png" style="width: 45%; margin-right: 10px;" />
-  <img src="./assets/Real_Result2.png" style="width: 45%;" />
-</div>
 
 
 ## 🗞️ News
