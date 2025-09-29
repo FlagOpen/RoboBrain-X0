@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./assets/RoboBrain-X0-logo.png" width="450"/>
+<img src="./assets/Robobrain-X0-logo.png" width="450"/>
 </div>
 
 # RoboBrain-X0: A Unified Cross-Embodiment Vision-Language-Action Model for Token Reasoning and Action Generation. 
@@ -39,7 +39,7 @@ We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology f
 
 
 <div style="display: flex; justify-content: center;">
-  <img src="./assets/Eval_Result.jpg" style="width: 90%;" />
+  <img src="./assets/Eval_Result.jpg" style="width: 90%; height: 120%" />
 </div>
 
 
