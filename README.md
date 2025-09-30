@@ -91,7 +91,7 @@ This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based 
 
 ```bash
 # Pull Docker Image.
-docker pull ghcr.io/robobrain-roboos-robotic/robotics_pretrain_flagscale:cuda12.4.1-cudnn9.5.0-python3.12-torch2.6.0-time250928-ssh
+docker pull harbor.baai.ac.cn/flagrelease-public/robobrain_x0_flagscale
 
 # Run Container.
 docker run -itd \
