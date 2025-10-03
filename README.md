@@ -106,6 +106,23 @@ docker run -itd \
   -v /nfs/hcr/models/:/models \
   ghcr.io/robobrain-roboos-robotic/robotics_pretrain_flagscale:cuda12.4.1-cudnn9.5.0-python3.12-torch2.6.0-time250928-ssh
 ```
+## 🤖 Data Processing
+Take the open-source Agilex data from **RoboBrain-X0-Dataset** as an example.
+
+1. Run `normal.py` to generate the normalization parameter file:
+
+```bash
+python data_process/normal.py
+```
+
+This step will produce the parameter file and action data distribution plots.
+
+2. Update `data_process/data_process.sh` with the correct file path and process number, then run it to generate training data in parallel:
+
+```bash
+bash data_process/data_process.sh
+```
+
 
 ## 🤖 Training
 ```bash
