@@ -38,7 +38,7 @@ def data_clean(data_path, task_name):
 
 def change_prompt(data_path, task_name):
 
-    if task_name in ['agilex', 'agilex_v2', 'agilex_demo']:
+    if task_name in ['agilex', 'agilex_v2']:
         user_prompt = "".join(agilex_prompt_v2_1)
         data = []
         with jsonlines.open(f"{data_path}/{task_name}_train.jsonl", 'r') as f:
@@ -89,7 +89,21 @@ def change_prompt(data_path, task_name):
                 data.append(line)
 
         for i in range(len(data)):
-            raw_task = 'Please store the objects on the table.'
+            raw_task = 'Arrange Items on the table and classify them into edible and inedible categories.'
+            sub_task = data[i]['task']
+            prompt = user_prompt.format(raw_task=raw_task.lower(), lan=sub_task.lower())
+            data[i]['conversations'][0]['value'] = prompt.replace('..', '.') + '.'
+
+
+    elif task_name == 'agilex_demo':
+        user_prompt = "".join(agilex_prompt_v2_1)
+        data = []
+        with jsonlines.open(f"{data_path}/{task_name}_train.jsonl", 'r') as f:
+            for line in f:
+                data.append(line)
+
+        for i in range(len(data)):
+            raw_task = 'Arrange Items on the table and classify them into edible and inedible categories.'
             sub_task = data[i]['task']
             prompt = user_prompt.format(raw_task=raw_task.lower(), lan=sub_task.lower())
             data[i]['conversations'][0]['value'] = prompt.replace('..', '.') + '.'
