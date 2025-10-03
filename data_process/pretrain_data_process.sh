@@ -2,11 +2,11 @@
 source conda_path/bin/activate
 conda activate env_name
 
-export FRAME_SAMPLE_INTERVAL=3 # 帧降采样到10Hz
-export ACTION_SAMPLE_INTERVAL=1
-export CHUNK=0
-export PADDING=30
-export DATA_VERSION='agilex_data' # 根据数据集类型设定，这里选择以开源Agilex数据为例
+export FRAME_SAMPLE_INTERVAL=3 # 帧降采样比例
+export ACTION_SAMPLE_INTERVAL=1 # 动作降采样比例
+export CHUNK=30 # action chunk size
+export PADDING=0 
+export DATA_VERSION='agilex_data' # 数据集版本名称与存储路径有关，这里选择以开源Agilex数据为例
 
 # 日志目录（自动创建）
 LOG_DIR="data_process/para_logs/${DATA_VERSION}"
@@ -63,5 +63,5 @@ for task in "${TASKS[@]}"; do
     echo "✅ $py_file 运行成功"
   fi
 done
-
+# 合并为一个jsonl文件并更换prompt
 python data_process/data_utils/data_postprocess.py --data_name agilex > "$LOG_DIR/postprocess.log" 2>&1 &
