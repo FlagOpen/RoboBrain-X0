@@ -11,7 +11,6 @@ from scipy.fft import idct
 # from action_token.tokenizer import FASTTokenizer
 from transformers import AutoProcessor
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# 构造fast tokenizer的绝对路径
 tokenizer_path = os.path.join(script_dir, "fast")
 
 class ActionChunkProcessor:
