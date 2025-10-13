@@ -161,30 +161,6 @@ class DualArmStateReader:
         self.piper_left = C_PiperInterface(self.can_left, False)
         self.piper_right = C_PiperInterface(self.can_right, False)
         self.connect()
-        # self._initialize_arm(self.piper_left, name="left")
-        # self._initialize_arm(self.piper_right, name="right")
-
-    # def _initialize_arm(self, piper: C_PiperInterface, name="arm"):
-    #     """切换模式并移动至初始位置"""
-    #     initial_joints = [-1.15188663e-02,  5.79031351e-02, -4.69262936e-01,  1.42808183e-01,
-    #                      1.13031626e+00, -6.81788497e-02,  6.62983961e-01]
-    #     factor = 57324.840764  # 弧度转piper整数
-    #     def encode(state):
-    #         joints = [round(j * factor) for j in state[:6]]
-    #         gripper = round(abs(state[6]) * 1000 * 100)
-    #         return joints, gripper
-
-    #     # 编码左右状态
-    #     joints_left, gripper_left = encode(initial_joints)
-    #     joints_right, gripper_right = encode(initial_joints)
-
-    #     # 单臂控制
-    #     piper.MotionCtrl_2(0x01, 0x01, 50, 0x00)
-    #     piper.JointCtrl(*joints_left)
-    #     piper.GripperCtrl(gripper_left, 1000, 0x01, 0)
-    #     piper.MotionCtrl_2(0x01, 0x01, 50, 0x00)
-
-    #     print(f"[{name}] Arm moved to initial pose.")
 
 
     def _enable_arm(self, piper: C_PiperInterface, name="arm"):

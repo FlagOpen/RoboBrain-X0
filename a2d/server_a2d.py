@@ -41,9 +41,7 @@ from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 from PIL import Image
 import cv2
 
-# Add external library path to sys.path
-sys.path.append("/share/project/dumengfei/code/sim_data_process")
-from pose_transform import add_delta_to_quat_pose
+from utils.pose_transform import add_delta_to_quat_pose
 from action_token.action_chunk_to_fast_token import ActionChunkProcessor
 
 # --- Service Configuration ---
@@ -53,9 +51,9 @@ SUBTASK_MODE = True  # Set to True or False to switch modes
 # Model Path Configuration
 # Select different model paths based on SUBTASK_MODE
 if SUBTASK_MODE:
-    MODEL_PATH = '/share/project/jiyuheng/ckpt/robotics_pretrain_modeltp1pp1_S6_subtask'
+    MODEL_PATH = ''
 else:
-    MODEL_PATH = '/share/project/jiyuheng/ckpt/robotics_pretrain_modeltp1pp1_S6_23'
+    MODEL_PATH = ''
 
 CONFIG_PATH = MODEL_PATH
 DEBUG = False
@@ -126,7 +124,7 @@ def inverse_transform(x_norm, scale, offset):
 
 # Load action normalization statistics
 try:
-    with open("/share/project/chenghy/data/agibot_beta/normal_stats_30hz_Padding0_0917.json", 'r') as f:
+    with open("", 'r') as f:
         action_stats = json.load(f)
 except FileNotFoundError:
     logger.error("Action normalization statistics file not found! Service may not denormalize actions correctly.")
@@ -151,7 +149,7 @@ def process_images(images_dict: dict) -> list:
         processed_list = [decode_image_base64_to_pil(images_dict[k]).resize((320, 240)) for k in image_keys]
         # Save images for debugging purposes
         for key, img in zip(image_keys, processed_list):
-            img.save(f'/share/project/dumengfei/code/real_eval/image_log/a2d_{key}.png')
+            img.save(f'image_log/a2d_{key}.png')
         return processed_list
     except KeyError as e:
         raise ValueError(f"Missing required image: {e}")

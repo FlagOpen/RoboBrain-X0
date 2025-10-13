@@ -51,11 +51,11 @@ SUBTASK_MODE = True  # Set to True or False to switch modes
 
 # Model and Statistics Path Configuration
 if SUBTASK_MODE:
-    MODEL_PATH = '/share/project/lizhiyu/data/ckpt/robotics_pretrain_modeltp1pp1_S6_subtask_r1lite_demo50'
-    STATS_PATH = "/share/project/dumengfei/code/pretrain_data_process/real_data/r1lite/demo_0920/r1lite_normal_demo_0921_30Hz.json"
+    MODEL_PATH = ''
+    STATS_PATH = ""
 else:
-    MODEL_PATH = '/share/project/jiyuheng/ckpt/robotics_pretrain_modeltp1pp1_S6_20'
-    STATS_PATH = "/share/project/chenghy/data/r1lite/r1lite_normal_Afps1_Padding20_0906_temp.json"
+    MODEL_PATH = ''
+    STATS_PATH = ""
 
 CONFIG_PATH = MODEL_PATH
 DEBUG = False
@@ -149,7 +149,7 @@ def process_images(images_dict: dict) -> list:
         image_keys = ['cam_head', 'cam_right_wrist', 'cam_left_wrist']
         processed_list = [decode_image_base64_to_pil(images_dict[k]).resize((320, 240)) for k in image_keys]
         for key, img in zip(image_keys, processed_list):
-            img.save(f'/share/project/dumengfei/code/real_eval/image_log/r1lite_{key}.png')
+            img.save(f'image_log/r1lite_{key}.png')
         return processed_list
     except KeyError as e:
         raise ValueError(f"Missing required image: {e}")

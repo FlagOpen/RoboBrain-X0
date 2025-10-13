@@ -12,8 +12,8 @@ import tap
 import matplotlib.pyplot as plt
 import sys
 from typing import List
-sys.path.append("/share/project/chenghy/code/utils")
-from pose_transform import euler_to_6d, compute_d6_axis_angle_deltas
+
+from utils.pose_transform import euler_to_6d, compute_d6_axis_angle_deltas
 ACTION_SAMPLE_INTERVAL = os.getenv("ACTION_SAMPLE_INTERVAL", 1)
 ACTION_SAMPLE_INTERVAL = int(ACTION_SAMPLE_INTERVAL)
 

@@ -123,9 +123,7 @@ def inverse_transform(x_norm, scale, offset):
 try:
     # Note: Different models may require loading different statistics files
     if SUBTASK_MODE:
-        stats_file = "/share/project/dumengfei/code/pretrain_data_process/real_data/agilex/demo_0920/agilex_normal_0921_30Hz.json"
-    else:
-        stats_file = "/share/project/dumengfei/code/pretrain_data_process/real_data/agilex/agilex_eval/agilex_normal_eval_30Hz.json"
+        stats_file = ""
     with open(stats_file, 'r') as f:
         action_stats = json.load(f)
     logger.info(f"Loaded action statistics file: {stats_file}")
@@ -149,7 +147,7 @@ def process_images(images_dict: dict) -> list:
         processed_list = [decode_image_base64_to_pil(images_dict[k]).resize((320, 240)) for k in image_keys]
         # 保存图像用于调试
         for key, img in zip(image_keys, processed_list):
-            img.save(f'/share/project/dumengfei/code/real_eval/image_log/agilex_{key}.png')
+            img.save(f'image_log/agilex_{key}.png')
         return processed_list
     except KeyError as e:
         raise ValueError(f"Missing required image: {e}")
