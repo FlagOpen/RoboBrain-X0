@@ -10,18 +10,24 @@ from typing import Dict, List
 from scipy.fft import idct
 # from action_token.tokenizer import FASTTokenizer
 from transformers import AutoProcessor
-
+script_dir = os.path.dirname(os.path.abspath(__file__))
+# 构造fast tokenizer的绝对路径
+tokenizer_path = os.path.join(script_dir, "fast")
 
 class ActionChunkProcessor:
     """Action Chunk处理器"""
     
-    def __init__(self, max_len: int = 256, fast_tokenizer_path: str = "./fast"):
+    def __init__(self, max_len: int = 256, fast_tokenizer_path: str = tokenizer_path):
         self.max_len = max_len
         
         # 初始化FAST tokenizer
         self.fast_tokenizer = AutoProcessor.from_pretrained(fast_tokenizer_path, trust_remote_code=True)
         # print(f"✓ FAST tokenizer加载成功")
 
+        # 初始化FASTTokenizer
+        # self.tokenizer = FASTTokenizer(max_len=max_len, fast_tokenizer_path=fast_tokenizer_path)
+        # print(f"✓ FASTTokenizer初始化成功")
+    
     def create_dummy_batch(self, batch_size: int = 2, action_horizon: int = 50, action_dim: int = 32) -> Dict:
         """创建dummy batch数据"""
         dummy_batch = {
