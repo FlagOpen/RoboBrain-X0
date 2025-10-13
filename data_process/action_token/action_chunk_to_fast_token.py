@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Action Chunk to Fast Token 转换程序 - 精简版
+Action Chunk to Fast Token 转换程序
 """
  
 import numpy as np
