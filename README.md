@@ -16,20 +16,25 @@
 </p>
 
 <p align="center">
-</a>&nbsp&nbsp🚀 <a href="https://github.com/FlagOpen/RoboBrain2.0">RoboBrain 2.0</a>: See Better. Think Harder. Do Smarter. 
+⚡ <a href="https://arxiv.org/abs/2510.09667">OmniSAT</a>: Compact Action Token, Faster Auto Regression for RoboBrain-X0 Pretraining.
 </p>
+
 <p align="center">
-</a>&nbsp&nbsp⚡ <a href="https://arxiv.org/abs/2510.09667">OmniSAT</a>: Compact Action Token, Faster Auto Regression.
+🚀 <a href="https://github.com/FlagOpen/RoboBrain2.0">RoboBrain 2.0</a>: See Better, Think Harder, Do Smarter beyond RoboBrain1.0.
 </p>
+
 <p align="center">
-        </a>&nbsp&nbsp🎯 <a href="https://flagopen.github.io/RoboOS/">RoboOS</a>: An Efficient Open-Source Multi-Robot Coordination System for RoboBrain.
+🎯 <a href="https://flagopen.github.io/RoboOS/">RoboOS</a>: An Efficient Open-Source Multi-Robot Coordination System for RoboBrain.
 </p>
+
 <p align="center">
-</a>&nbsp&nbsp⭐️ <a href="https://github.com/tanhuajie/Reason-RFT">Reason-RFT</a>: Core Post-Training Strategy for Embodied Visual Reasoning in RoboBrain2.0.
+⭐️ <a href="https://github.com/tanhuajie/Reason-RFT">Reason-RFT</a>: Core Post-Training Strategy for Embodied Visual Reasoning in RoboBrain2.0.
 </p>
+
 <p align="center">
-</a>&nbsp&nbsp🌍 <a href="https://github.com/FlagOpen/RoboBrain">RoboBrain 1.0</a>: A Unified Brain Model for Robotic Manipulation from Abstract to Concrete.
+🌍 <a href="https://github.com/FlagOpen/RoboBrain">RoboBrain 1.0</a>: A Unified Brain Model for Robotic Manipulation from Abstract to Concrete.
 </p>
+
 
 💬 ***If you have any questions, feel free to contact us via WeChat or RedNote.***
 
