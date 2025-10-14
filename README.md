@@ -19,6 +19,9 @@
 </a>&nbsp&nbsp🚀 <a href="https://github.com/FlagOpen/RoboBrain2.0">RoboBrain 2.0</a>: See Better. Think Harder. Do Smarter. 
 </p>
 <p align="center">
+</a>&nbsp&nbsp⚡ <a href="https://arxiv.org/abs/2510.09667">OmniSAT</a>: Compact Action Token, Faster Auto Regression.
+</p>
+<p align="center">
         </a>&nbsp&nbsp🎯 <a href="https://flagopen.github.io/RoboOS/">RoboOS</a>: An Efficient Open-Source Multi-Robot Coordination System for RoboBrain.
 </p>
 <p align="center">
