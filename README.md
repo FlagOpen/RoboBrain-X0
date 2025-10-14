@@ -215,6 +215,15 @@ If you find this project useful, welcome to cite us.
     journal={arXiv preprint arXiv:2503.20752},
     year={2025}
 }
+@misc{lyu2025omnisatcompactactiontoken,
+      title={OmniSAT: Compact Action Token, Faster Auto Regression}, 
+      author={Huaihai Lyu and Chaofan Chen and Senwei Xie and Pengwei Wang and Xiansheng Chen and Shanghang Zhang and Changsheng Xu},
+      year={2025},
+      eprint={2510.09667},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2510.09667}, 
+}
 
 ```
 
