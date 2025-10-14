@@ -199,33 +199,6 @@ Inference code examples are provided for four robot platforms: A2D, Franka, Agil
 ## 📑 Citation
 If you find this project useful, welcome to cite us.
 ```bib
-@article{RoboBrain1.0,
-    title={Robobrain: A unified brain model for robotic manipulation from abstract to concrete},
-    author={Ji, Yuheng and Tan, Huajie and Shi, Jiayu and Hao, Xiaoshuai and Zhang, Yuan and Zhang, Hengyuan and Wang, Pengwei and Zhao, Mengdi and Mu, Yao and An, Pengju and others},
-    journal={arXiv preprint arXiv:2502.21257},
-    year={2025}
-}
-
-@article{RoboBrain2.0TechnicalReport,
-    title={RoboBrain 2.0 Technical Report},
-    author={BAAI RoboBrain Team},
-    journal={arXiv preprint arXiv:2507.02029},
-    year={2025}
-}
-
-@article{zhou2025roborefer,
-    title={RoboRefer: Towards Spatial Referring with Reasoning in Vision-Language Models for Robotics},
-    author={Zhou, Enshen and An, Jingkun and Chi, Cheng and Han, Yi and Rong, Shanyu and Zhang, Chi and Wang, Pengwei and Wang, Zhongyuan and Huang, Tiejun and Sheng, Lu and others},
-    journal={arXiv preprint arXiv:2506.04308},
-    year={2025}
-}
-
-@article{Reason-RFT,
-    title={Reason-rft: Reinforcement fine-tuning for visual reasoning},
-    author={Tan, Huajie and Ji, Yuheng and Hao, Xiaoshuai and Lin, Minglan and Wang, Pengwei and Wang, Zhongyuan and Zhang, Shanghang},
-    journal={arXiv preprint arXiv:2503.20752},
-    year={2025}
-}
 @misc{lyu2025omnisatcompactactiontoken,
       title={OmniSAT: Compact Action Token, Faster Auto Regression}, 
       author={Huaihai Lyu and Chaofan Chen and Senwei Xie and Pengwei Wang and Xiansheng Chen and Shanghang Zhang and Changsheng Xu},
@@ -235,6 +208,34 @@ If you find this project useful, welcome to cite us.
       primaryClass={cs.CV},
       url={https://arxiv.org/abs/2510.09667}, 
 }
+@article{RoboBrain2.0TechnicalReport,
+    title={RoboBrain 2.0 Technical Report},
+    author={BAAI RoboBrain Team},
+    journal={arXiv preprint arXiv:2507.02029},
+    year={2025}
+}
+@article{zhou2025roborefer,
+    title={RoboRefer: Towards Spatial Referring with Reasoning in Vision-Language Models for Robotics},
+    author={Zhou, Enshen and An, Jingkun and Chi, Cheng and Han, Yi and Rong, Shanyu and Zhang, Chi and Wang, Pengwei and Wang, Zhongyuan and Huang, Tiejun and Sheng, Lu and others},
+    journal={arXiv preprint arXiv:2506.04308},
+    year={2025}
+}
+@article{Reason-RFT,
+    title={Reason-rft: Reinforcement fine-tuning for visual reasoning},
+    author={Tan, Huajie and Ji, Yuheng and Hao, Xiaoshuai and Lin, Minglan and Wang, Pengwei and Wang, Zhongyuan and Zhang, Shanghang},
+    journal={arXiv preprint arXiv:2503.20752},
+    year={2025}
+}
+@article{RoboBrain1.0,
+    title={Robobrain: A unified brain model for robotic manipulation from abstract to concrete},
+    author={Ji, Yuheng and Tan, Huajie and Shi, Jiayu and Hao, Xiaoshuai and Zhang, Yuan and Zhang, Hengyuan and Wang, Pengwei and Zhao, Mengdi and Mu, Yao and An, Pengju and others},
+    journal={arXiv preprint arXiv:2502.21257},
+    year={2025}
+}
+
+
+
+
 
 ```
 
