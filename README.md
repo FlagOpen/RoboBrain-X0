@@ -41,9 +41,9 @@ We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology f
 <div style="display: flex; justify-content: center;">
   <img src="./assets/Eval_Result.png" style="width: 120%; height: 150%" />
 </div>
-<div style="display: flex; justify-content: center;">
+<!-- <div style="display: flex; justify-content: center;">
   <img src="./assets/train_data-Robotics.png"  width=750 />
-</div>
+</div> -->
 
 
 
