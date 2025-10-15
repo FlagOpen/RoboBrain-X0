@@ -16,17 +16,25 @@
 </p>
 
 <p align="center">
-</a>&nbsp&nbsp🚀 <a href="https://github.com/FlagOpen/RoboBrain2.0">RoboBrain 2.0</a>: See Better. Think Harder. Do Smarter. 
+⚡ <a href="https://arxiv.org/abs/2510.09667">OmniSAT</a>: Compact Action Token, Faster Auto Regression for RoboBrain-X0 Pretraining.
 </p>
+
 <p align="center">
-        </a>&nbsp&nbsp🎯 <a href="https://flagopen.github.io/RoboOS/">RoboOS</a>: An Efficient Open-Source Multi-Robot Coordination System for RoboBrain.
+🚀 <a href="https://github.com/FlagOpen/RoboBrain2.0">RoboBrain 2.0</a>: See Better, Think Harder, Do Smarter beyond RoboBrain1.0.
 </p>
+
 <p align="center">
-</a>&nbsp&nbsp⭐️ <a href="https://github.com/tanhuajie/Reason-RFT">Reason-RFT</a>: Core Post-Training Strategy for Embodied Visual Reasoning in RoboBrain2.0.
+⭐️ <a href="https://github.com/tanhuajie/Reason-RFT">Reason-RFT</a>: Core Post-Training Strategy for Embodied Visual Reasoning in RoboBrain2.0.
 </p>
+
 <p align="center">
-</a>&nbsp&nbsp🌍 <a href="https://github.com/FlagOpen/RoboBrain">RoboBrain 1.0</a>: A Unified Brain Model for Robotic Manipulation from Abstract to Concrete.
+🎯 <a href="https://flagopen.github.io/RoboOS/">RoboOS</a>: An Efficient Open-Source Multi-Robot Coordination System for RoboBrain.
 </p>
+
+<p align="center">
+🌍 <a href="https://github.com/FlagOpen/RoboBrain">RoboBrain 1.0</a>: A Unified Brain Model for Robotic Manipulation from Abstract to Concrete.
+</p>
+
 
 💬 ***If you have any questions, feel free to contact us via WeChat or RedNote.***
 
@@ -41,6 +49,9 @@ We are thrilled to introduce **RoboBrain-X0**, a groundbreaking cross-ontology f
 <div style="display: flex; justify-content: center;">
   <img src="./assets/Eval_Result.png" style="width: 120%; height: 150%" />
 </div>
+<!-- <div style="display: flex; justify-content: center;">
+  <img src="./assets/train_data-Robotics.png"  width=750 />
+</div> -->
 
 
 
@@ -92,6 +103,8 @@ This model includes **RoboBrain 2.0** and **OmniSAT** (action tokenizer). Based 
 ```bash
 # Pull Docker Image.
 docker pull harbor.baai.ac.cn/flagrelease-public/robobrain_x0_flagscale
+# Backup link:
+# docker pull harbor.baai.ac.cn/flagrelease-public/robobrain_x0_flagscale:cuda12.4.1-cudnn9.5.0-python3.12-torch2.6.0-time250928-ssh
 
 # Run Container.
 docker run -itd \
@@ -186,6 +199,33 @@ Inference code examples are provided for four robot platforms: A2D, Franka, Agil
 ## 📑 Citation
 If you find this project useful, welcome to cite us.
 ```bib
+@misc{lyu2025omnisatcompactactiontoken,
+      title={OmniSAT: Compact Action Token, Faster Auto Regression}, 
+      author={Huaihai Lyu and Chaofan Chen and Senwei Xie and Pengwei Wang and Xiansheng Chen and Shanghang Zhang and Changsheng Xu},
+      year={2025},
+      eprint={2510.09667},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2510.09667}, 
+}
+@article{RoboBrain2.0TechnicalReport,
+    title={RoboBrain 2.0 Technical Report},
+    author={BAAI RoboBrain Team},
+    journal={arXiv preprint arXiv:2507.02029},
+    year={2025}
+}
+@article{zhou2025roborefer,
+    title={RoboRefer: Towards Spatial Referring with Reasoning in Vision-Language Models for Robotics},
+    author={Zhou, Enshen and An, Jingkun and Chi, Cheng and Han, Yi and Rong, Shanyu and Zhang, Chi and Wang, Pengwei and Wang, Zhongyuan and Huang, Tiejun and Sheng, Lu and others},
+    journal={arXiv preprint arXiv:2506.04308},
+    year={2025}
+}
+@article{Reason-RFT,
+    title={Reason-rft: Reinforcement fine-tuning for visual reasoning},
+    author={Tan, Huajie and Ji, Yuheng and Hao, Xiaoshuai and Lin, Minglan and Wang, Pengwei and Wang, Zhongyuan and Zhang, Shanghang},
+    journal={arXiv preprint arXiv:2503.20752},
+    year={2025}
+}
 @article{RoboBrain1.0,
     title={Robobrain: A unified brain model for robotic manipulation from abstract to concrete},
     author={Ji, Yuheng and Tan, Huajie and Shi, Jiayu and Hao, Xiaoshuai and Zhang, Yuan and Zhang, Hengyuan and Wang, Pengwei and Zhao, Mengdi and Mu, Yao and An, Pengju and others},
@@ -193,26 +233,9 @@ If you find this project useful, welcome to cite us.
     year={2025}
 }
 
-@article{RoboBrain2.0TechnicalReport,
-    title={RoboBrain 2.0 Technical Report},
-    author={BAAI RoboBrain Team},
-    journal={arXiv preprint arXiv:2507.02029},
-    year={2025}
-}
 
-@article{zhou2025roborefer,
-    title={RoboRefer: Towards Spatial Referring with Reasoning in Vision-Language Models for Robotics},
-    author={Zhou, Enshen and An, Jingkun and Chi, Cheng and Han, Yi and Rong, Shanyu and Zhang, Chi and Wang, Pengwei and Wang, Zhongyuan and Huang, Tiejun and Sheng, Lu and others},
-    journal={arXiv preprint arXiv:2506.04308},
-    year={2025}
-}
 
-@article{Reason-RFT,
-    title={Reason-rft: Reinforcement fine-tuning for visual reasoning},
-    author={Tan, Huajie and Ji, Yuheng and Hao, Xiaoshuai and Lin, Minglan and Wang, Pengwei and Wang, Zhongyuan and Zhang, Shanghang},
-    journal={arXiv preprint arXiv:2503.20752},
-    year={2025}
-}
+
 
 ```
 
