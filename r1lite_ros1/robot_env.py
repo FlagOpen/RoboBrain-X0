@@ -35,9 +35,6 @@ def decode_image_series(topic: str, bridge: CvBridge):
     img = bridge.compressed_imgmsg_to_cv2(msg)  # BGR
     # return cv2.resize(img, (640, 480))
     return img
-    # ok, buf = cv2.imencode(".jpg", img)
-    # if ok: return buf
-    # else: return None
 
 
 
@@ -86,12 +83,10 @@ class DualArmStateReader:
         joint_left = decode_joint_series("/hdas/feedback_arm_left")
 
         gripper_left = decode_joint_series('/hdas/feedback_gripper_left')
-        # joint_left.extend(gripper_left)
         joint_left[-1] = gripper_left[-1]
         
         joint_right = decode_joint_series("/hdas/feedback_arm_right")    
         gripper_right = decode_joint_series('/hdas/feedback_gripper_right')
-        # joint_right.extend(gripper_right)
         joint_right[-1] = gripper_right[-1]
         
         joint_final = joint_right
@@ -153,8 +148,6 @@ class DualArmStateReader:
         left_open.position = [gripper_left]
         right_open.position = [gripper_right] 
         
-        # print(left_open)    
-        # print(right_open) 
         
         self.left_ee_pos.publish(left_ee_state)
         self.right_ee_pos.publish(right_ee_state)
@@ -209,8 +202,6 @@ class RobotEnv:
         if self._arm:
             frames = {}
             for topic_name in TOPIC_MAP:
-                # print(topic_name)
-                # import ipdb; ipdb.set_trace()
                 if 'image' in topic_name:
                     frames[topic_name] = decode_image_series(TOPIC_MAP[topic_name], bridge)
             state = {
@@ -223,11 +214,9 @@ class RobotEnv:
 
 
     def control(self, action, wait: bool = True):
-        # print(action)
         if not self._arm:
             raise RuntimeError("Arm not initialised; pass arm_ip when constructing RobotEnv.")
             
-        # torso_joint = [-0.57770002, 1.71070004, 1.13240004, 0.0]
         torso_joint = [-1.0339000225067139, 2.1635000705718994, 1.1513999700546265, 0.0]
         self._arm.send_joint_commands(action[7:13], action[:6], torso_joint, action[13], action[6])
     
@@ -235,11 +224,8 @@ class RobotEnv:
     def control_eef(self, action, wait=True):
         if not self._arm:
             raise RuntimeError("Arm not initialised; pass arm_ip when constructing RobotEnv.")
-            
-        # torso_joint = [-0.57770002, 1.71070004, 1.13240004, 0.0]
+
         torso_joint = [-1.0339000225067139, 2.1635000705718994, 1.1513999700546265, 0.0]
-        # print(action)
-        # self._arm.send_eef_commands(action[7:13], action[:6], torso_joint, action[13], action[6])
         self._arm.send_eef_commands(action[8:15], action[:7], torso_joint, action[15], action[7])
         time.sleep(0.01)
         

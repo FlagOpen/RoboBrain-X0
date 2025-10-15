@@ -120,9 +120,6 @@ def main():
                 print(f"[Step {i+1}/{len(actions)}] Executing action: {np.round(action, 3)}")
 
                 if CONTROL_MODE == 'eepose':
-                    # Optional: Apply scaling or clipping to gripper commands
-                    # action[7] *= 0.9  # right gripper
-                    # action[15] *= 0.9 # left gripper
                     env.control_eef(action)
                 elif CONTROL_MODE == 'joint':
                     env.control(action)

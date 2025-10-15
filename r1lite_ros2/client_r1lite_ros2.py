@@ -119,13 +119,8 @@ def main():
                 action = np.array(act, dtype=np.float32)
                 print(f"[Step {i+1}/{len(actions)}] Executing action: {np.round(action, 3)}")
                 
-                # Note: The original script used env.control() for eepose mode. Adjust if needed.
-                # If env.control_eef() is available and preferred, use that instead.
                 if CONTROL_MODE == 'eepose':
-                    # Example of hardcoding gripper values if model output is unreliable
-                    # action[7] = 70  # right gripper
-                    # action[15] = 70 # left gripper
-                    env.control(action) # Assuming this takes the eepose action format
+                    env.control_eef(action)
                 elif CONTROL_MODE == 'joint':
                     env.control(action)
                     
