@@ -41,8 +41,12 @@ from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 from PIL import Image
 import cv2
 
-from utils.pose_transform import add_delta_to_quat_pose
-from action_token.action_chunk_to_fast_token import ActionChunkProcessor
+# Add external library path to sys.path
+from pathlib import Path
+root = Path(__file__).parent.parent 
+sys.path.append(str(root))
+from data_process.action_token.action_chunk_to_fast_token import ActionChunkProcessor
+from data_process.data_utils.pose_transform import add_delta_to_quat_pose
 
 # --- Service Configuration ---
 # Enable/disable subtask mode

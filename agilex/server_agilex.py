@@ -38,8 +38,11 @@ from flask_cors import CORS
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
 from PIL import Image
 
-from utils.pose_transform import add_delta_to_euler_pose
-from action_token.action_chunk_to_fast_token import ActionChunkProcessor
+from pathlib import Path
+root = Path(__file__).parent.parent 
+sys.path.append(str(root))
+from data_process.action_token.action_chunk_to_fast_token import ActionChunkProcessor
+from data_process.data_utils.pose_transform import add_delta_to_euler_pose
 
 # --- Service Configuration ---
 # Whether to enable subtask mode
@@ -48,9 +51,9 @@ SUBTASK_MODE = True  # Set to True or False to switch modes
 # Model path configuration
 # Choose different model paths based on SUBTASK_MODE
 if SUBTASK_MODE:
-    MODEL_PATH = '/share/project/lizhiyu/data/ckpt/robotics_pretrain_modeltp1pp1_S6_subtask_agilex_demo50'
+    MODEL_PATH = ''
 else:
-    MODEL_PATH = '/share/project/jiyuheng/ckpt/robotics_pretrain_modeltp1pp1_S6_subtask_agilex_eval1_10epoch'
+    MODEL_PATH = ''
 
 CONFIG_PATH = MODEL_PATH
 DEBUG = False

@@ -4,87 +4,8 @@ from scipy.spatial.transform import Rotation as R
 # -----------------------------------------------------------------------------
 # 6D Rotation Representations <--> Euler Angles / Quaternions / Matrix
 # -----------------------------------------------------------------------------
-def sixd_to_rotation(sixd):
-    """
-    将6D旋转表示转换为Rotation对象
-    
-    参数:
-        sixd: 形状为(6,)的数组，6D旋转表示
-        
-    返回:
-        Rotation对象
-    """
-    # 重塑为3x2矩阵
-    mat = sixd.reshape(3, 2)
-    # 计算第三列（前两列的叉积）
-    col3 = np.cross(mat[:, 0], mat[:, 1])
-    # 组合成3x3旋转矩阵
-    rot_mat = np.column_stack([mat, col3])
-    # 正交化以确保是有效的旋转矩阵
-    rot_mat, _ = np.linalg.qr(rot_mat)
-    # 确保行列式为1（右手坐标系）
-    if np.linalg.det(rot_mat) < 0:
-        rot_mat[:, 2] *= -1
-    return R.from_matrix(rot_mat)
 
-def quat_to_rotation(quaternion):
-    """
-    使用SciPy将四元数转换为旋转矩阵
-    
-    参数:
-        quaternion: 四元数，格式为 [x, y, z, w]（SciPy默认使用此格式）
-        
-    返回:
-        rotation_matrix: 3x3的旋转矩阵
-    """
-    # 创建Rotation对象，注意SciPy默认四元数格式为(x, y, z, w)
-    rot = R.from_quat(quaternion)
-    # 转换为旋转矩阵
-    rotation_matrix = rot.as_matrix()
-    return rotation_matrix
-
-def add_delta_to_euler_pose(base_euler, delta_axis_angle):
-    """
-    将quat转换为6D旋转，并与基础6D姿态叠加
-    
-    参数:
-        base_sixd: 形状为(6,)的数组，基础姿态的6D表示
-        delta_axis_angle: 形状为(3,)的数组，delta变换的轴角表示
-        
-    返回:
-        形状为(3,)的数组，叠加后的目标euler姿态
-    """
-    # 将基础6D姿态转换为Rotation对象
-    base_rot = euler_to_matrix(base_euler)
-    
-    # 将delta轴角转换为Rotation对象
-    delta_rot = R.from_rotvec(delta_axis_angle)
-    
-    # 叠加旋转：目标旋转 = 基础旋转 * delta旋转
-    target_rot = delta_rot * base_rot
-    
-    # 将目标旋转转换为6D表示
-    target_euler = target_rot.as_euler('xyz')
-    return target_euler
-
-def add_delta_to_quat_pose(base_quat, delta_axis_angle):
-    # 将基础quat姿态转换为Rotation对象
-    base_rot = R.from_quat(base_quat)
-
-    # 将delta轴角转换为Rotation对象
-    delta_rot = R.from_rotvec(delta_axis_angle)
-
-    # 叠加旋转：目标旋转 = delta旋转 * 基础旋转
-    # R_{t+1} = delta_R * R_t
-    # 注意：scipy的Rotation对象重载了*运算符用于正确的旋转组合
-    target_rot = delta_rot * base_rot
-
-    # 将目标旋转转换四元数
-    target_quat = target_rot.as_quat()
-    return target_quat
-
-
-def euler_to_matrix(euler_angles: np.ndarray, convention: str = 'xyz') -> np.ndarray:
+def euler_to_6d(euler_angles: np.ndarray, convention: str = 'xyz') -> np.ndarray:
     """
     将一批欧拉角转换为 6D 连续旋转表示。
 
@@ -102,7 +23,13 @@ def euler_to_matrix(euler_angles: np.ndarray, convention: str = 'xyz') -> np.nda
         
     # 从欧拉角创建旋转对象
     rot = R.from_euler(convention, euler_angles)
-    return rot
+    # 获取旋转矩阵
+    matrix = rot.as_matrix()
+
+    # 提取前两列并展平为6维向量
+    d6 = np.concatenate([matrix[..., :, 0], matrix[..., :, 1]], axis=-1)
+    
+    return d6.flatten() if is_single else d6
 
 def d6_to_matrix(d6: np.ndarray) -> np.ndarray:
     """
