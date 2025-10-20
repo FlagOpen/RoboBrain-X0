@@ -9,7 +9,7 @@ import jsonlines
 from typing import Tuple, List, Dict, Any, Union
 import sys
 sys.path.append("data_process/data_utils")
-from utils.pose_transform import euler_to_6d, compute_d6_axis_angle_deltas
+from pose_transform import euler_to_6d, compute_d6_axis_angle_deltas
 from action_token.action_chunk_to_fast_token import ActionChunkProcessor
 
 FRAME_SAMPLE_INTERVAL = os.getenv("FRAME_SAMPLE_INTERVAL", 3)
