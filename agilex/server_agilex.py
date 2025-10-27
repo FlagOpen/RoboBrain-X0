@@ -225,6 +225,15 @@ def infer_api():
                 "Each EEPose here includes 3 delta position(xyz) + 3 delta orientation(axis-angle) + 1 gripper(opening range)\n\n"
                 "Your current visual inputs are: robot front image"
             )
+            content = [
+                {"type": "text", "text": prompt_template},
+                {"type": "image", "image": f"data:image;base64,{images['cam_high']}"},
+                {"type": "text", "text": ", right wrist image"},
+                {"type": "image", "image": f"data:image;base64,{images['cam_right_wrist']}"},
+                {"type": "text", "text": " and left wrist image"},
+                {"type": "image", "image": f"data:image;base64,{images['cam_left_wrist']}"},
+                {"type": "text", "text": f"\nYour overall task is: {instruction.lower()}."},
+            ]
         else:
             # 标准模式 Prompt
             prompt_template = (
@@ -232,18 +241,18 @@ def infer_api():
                 "You need to output control tokens that can be decoded into a 30×14 action sequence. The sequence has 30 consecutive actions, each with 14 dimensions. "
                 "The first 7 dimensions control the right arm EEPose and the last 7 dimensions control the left arm EEPose. "
                 "Each EEPose here includes 3 delta position(xyz) + 3 delta orientation(axis-angle) + 1 gripper(opening range)\n\n"
-                "Your current visual inputs are: "
+                "Your current visual inputs are: robot front image"
             )
+            content = [
+                {"type": "text", "text": prompt_template},
+                {"type": "image", "image": f"data:image;base64,{images['cam_high']}"},
+                {"type": "text", "text": ", right wrist image"},
+                {"type": "image", "image": f"data:image;base64,{images['cam_right_wrist']}"},
+                {"type": "text", "text": " and left wrist image"},
+                {"type": "image", "image": f"data:image;base64,{images['cam_left_wrist']}"},
+                {"type": "text", "text": f"\nYour overall task is: {instruction.lower()}. Currently, focus on completing the subtask: {instruction.lower()}"},
+            ]
 
-        content = [
-            {"type": "text", "text": prompt_template},
-            {"type": "image", "image": f"data:image;base64,{images['cam_high']}"},
-            {"type": "text", "text": ", right wrist image"},
-            {"type": "image", "image": f"data:image;base64,{images['cam_right_wrist']}"},
-            {"type": "text", "text": " and left wrist image"},
-            {"type": "image", "image": f"data:image;base64,{images['cam_left_wrist']}"},
-            {"type": "text", "text": f"\nYour overall task is: {instruction.lower()}."},
-        ]
         
         messages = [{"role": "user", "content": content}]
         text_prompt = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
@@ -299,7 +308,7 @@ def infer_api():
         
         # 计算绝对姿态序列
         final_ee_actions = []
-        current_eef_pose = eef_pose.squeeze().copy()
+        current_eef_pose = eef_pose.squeeze().copy()  # (20,)
         for i in range(30):
             # 右臂更新
             current_eef_pose[:3] += delta_actions_denorm[i][:3]

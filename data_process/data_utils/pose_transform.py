@@ -289,6 +289,132 @@ def compute_quat_axis_angle_deltas(quat_sequence: np.ndarray) -> np.ndarray:
     else:
         raise ValueError("quat_sequence 应为 (T,4) 或 (B,T,4) 形状")
 
+def euler_to_matrix(euler_angles: np.ndarray, convention: str = 'xyz') -> np.ndarray:
+    """
+    将一批欧拉角转换为 6D 连续旋转表示。
+
+    Args:
+        euler_angles (np.ndarray): 形状为 (N, 3) 或 (3,) 的欧拉角数组。
+        convention (str): 欧拉角旋转顺序，例如 'xyz', 'zyx'。
+                          根据您的描述，LeRobot 使用 'xyz'。
+
+    Returns:
+        np.ndarray: 形状为 (N, 6) 或 (6,) 的 6D 旋转表示。
+    """
+    is_single = euler_angles.ndim == 1
+    if is_single:
+        euler_angles = euler_angles[np.newaxis, :]
+        
+    # 从欧拉角创建旋转对象
+    rot = R.from_euler(convention, euler_angles)
+    return rot
+
+def add_delta_to_euler_pose(base_euler, delta_axis_angle):
+    """
+    将quat转换为6D旋转，并与基础6D姿态叠加
+    
+    参数:
+        base_sixd: 形状为(6,)的数组，基础姿态的6D表示
+        delta_axis_angle: 形状为(3,)的数组，delta变换的轴角表示
+        
+    返回:
+        形状为(3,)的数组，叠加后的目标euler姿态
+    """
+    # 将基础6D姿态转换为Rotation对象
+    base_rot = euler_to_matrix(base_euler)
+    
+    # 将delta轴角转换为Rotation对象
+    delta_rot = R.from_rotvec(delta_axis_angle)
+    
+    # 叠加旋转：目标旋转 = 基础旋转 * delta旋转
+    target_rot = delta_rot * base_rot
+    
+    # 将目标旋转转换为6D表示
+    target_euler = target_rot.as_euler('xyz')
+    return target_euler
+
+
+def add_delta_to_quat_pose(base_quat, delta_axis_angle):
+    # 将基础quat姿态转换为Rotation对象
+    base_rot = R.from_quat(base_quat)
+
+    # 将delta轴角转换为Rotation对象
+    delta_rot = R.from_rotvec(delta_axis_angle)
+
+    # 叠加旋转：目标旋转 = delta旋转 * 基础旋转
+    # R_{t+1} = delta_R * R_t
+    # 注意：scipy的Rotation对象重载了*运算符用于正确的旋转组合
+    target_rot = delta_rot * base_rot
+
+    # 将目标旋转转换四元数
+    target_quat = target_rot.as_quat()
+    return target_quat
+
+
+def calculate_delta_6d_as_axis_angle(d6_t: np.ndarray, d6_t_plus_1: np.ndarray) -> np.ndarray:
+    """
+    计算两个 6D 姿态之间的 delta a ction，并以轴角（3D向量）形式返回。
+
+    Args:
+        d6_t (np.ndarray): t 时刻的 6D 姿态，形状 (N, 6) 或 (6,)
+        d6_t_plus_1 (np.ndarray): t+1 时刻的 6D 姿态，形状 (N, 6) 或 (6,)
+
+    Returns:
+        np.ndarray: 轴角形式的 delta action，形状 (N, 3) 或 (3,)
+    """
+    # 1. 转换为旋转矩阵
+    R_t = d6_to_matrix(d6_t)
+    R_t_plus_1 = d6_to_matrix(d6_t_plus_1)
+
+    # 2. 计算相对旋转 ΔR = R_{t+1} * R_t^{-1}
+    # 对于批处理，使用 np.einsum 或循环。这里为了清晰，展示单个计算的逻辑
+    # np.matmul (@) 和 .transpose(0, 2, 1) 可以很好地处理批处理
+    if R_t.ndim == 3: # 批处理
+        delta_R = R_t_plus_1 @ R_t.transpose(0, 2, 1)
+    else: # 单个
+        delta_R = R_t_plus_1 @ R_t.T
+        
+    # 3. 将 ΔR 转换为轴角
+    delta_axis_angle = R.from_matrix(delta_R).as_rotvec()
+    
+    return delta_axis_angle
+
+def calculate_delta_quat_as_axis_angle(quat_t: np.ndarray, quat_t_plus_1: np.ndarray) -> np.ndarray:
+    """
+    计算两个四元数之间的 delta action，并以轴角（3D向量）形式返回。
+    包含关键的四元数对齐步骤。
+
+    Args:
+        quat_t (np.ndarray): t 时刻的四元数 (xyzw), 形状 (N, 4) 或 (4,)
+        quat_t_plus_1 (np.ndarray): t+1 时刻的四元数 (xyzw), 形状 (N, 4) 或 (4,)
+
+    Returns:
+        np.ndarray: 轴角形式的 delta action，形状 (N, 3) 或 (3,)
+    """
+    is_single = quat_t.ndim == 1
+    if is_single:
+        quat_t = quat_t[np.newaxis, :]
+        quat_t_plus_1 = quat_t_plus_1[np.newaxis, :]
+
+    # 1. 对齐四元数
+    # 计算点积
+    dot_product = np.sum(quat_t * quat_t_plus_1, axis=1)
+    # 如果点积为负，翻转 t+1 时刻的四元数
+    quat_t_plus_1[dot_product < 0] = -quat_t_plus_1[dot_product < 0]
+    
+    # 2. 计算相对旋转 Δq = q_{t+1} * q_t^{-1}
+    # scipy Rotation 会自动处理共轭和乘法
+    q_t_rot = R.from_quat(quat_t)
+    q_t_plus_1_rot = R.from_quat(quat_t_plus_1)
+    
+    delta_q_rot = q_t_plus_1_rot * q_t_rot.inv()
+    
+    # 3. 转换为轴角
+    delta_axis_angle = delta_q_rot.as_rotvec()
+    
+    return delta_axis_angle.flatten() if is_single else delta_axis_angle
+    
+    
 if __name__ == '__main__':
     # --- 使用示例和验证 ---
     
